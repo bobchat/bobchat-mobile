@@ -141,4 +141,3 @@ client.register(user)
   console.log(res);
 })
 .catch(err => console.error(err));
-f
