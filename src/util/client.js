@@ -1,5 +1,4 @@
-const btoa = require("btoa");
-const request = require("superagent");
+import request from 'superagent'
 
 class Client {
   constructor(baseUrl = "") {
@@ -91,9 +90,9 @@ class Client {
       })
       .catch(this._handleError);
   }
-  register(userName, phoneNumber) {
+  register(username, phoneNumber) {
     return this.post("/user/register", {
-      userName,
+      username,
       phoneNumber
     })
       .then(res => {
@@ -119,25 +118,13 @@ class Client {
       .then(res => res.body)
       .catch(this._handleError);
   }
+  // Messages
+  listMessages(roomId){
+    return this.get(`/message/list/${roomId}`)
+      .then(res => res.body)
+      .catch(this._handleError);
+  }
 }
 
-let client = new Client("http://localhost:8080");
 
-let user = {
-  _id: "5b933843bfde01490c9fbd88",
-  phoneNumberVerifiedAt: null,
-  username: "sam",
-  phoneNumber: "4062104444",
-  created: "2018-09-08T02:47:31.570Z"
-};
-
-
-
-  client.login(user.username, user.phoneNumber)
-  .then(res => client.createRoom("This is the first room", user._id))
-  .then(res => {
-    console.log(res);
-  })
-  .catch(err => {
-    console.log(err);
-  });
+export default Client;
