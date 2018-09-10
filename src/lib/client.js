@@ -23,6 +23,7 @@ class Client {
     this.token = token;
   }
   _handleError(error) {
+    console.error(error);
     throw error;
   }
   _handleHTTPError(error) {
@@ -120,6 +121,7 @@ class Client {
   }
   // Messages
   listMessages(roomId){
+    console.log()
     return this.get(`/message/list/${roomId}`)
       .then(res => res.body)
       .catch(this._handleError);
