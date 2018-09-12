@@ -1,21 +1,35 @@
-import { takeLatest, call, put, all } from "redux-saga/effects";
+import { eventChannel } from "redux-saga";
+import { takeLatest, call, put, all, take, fork, takeEvery} from "redux-saga/effects";
 import Client from "./../lib/client";
-import * as types from './../actions/types';
-import * as actions from './../actions/actions';
+import connect from "./../lib/connect";
+import * as types from "./../actions/types";
+import * as actions from "./../actions/actions";
 
-let API = new Client('http://localhost:8080');
+let API = new Client("http://localhost:8080");
+let socket;
+
+(async () => {
+  socket = await connect();
+})();
 
 export default function* rootSaga() {
-  yield all(
-    [
+  try {
+    yield all([
       loginWatch(),
       registerWatch(),
       createRoomWatch(),
       listRoomsWatch(),
       listMessagesWatch(),
-    ]
-  );
+      socketIO()
+    ]);
+  } catch (e) {
+    console.error(e);
+  }
 }
+
+/*================================================================================
+API Requests
+================================================================================*/
 
 // Login
 function* loginWatch() {
@@ -32,14 +46,16 @@ function* loginSaga(action) {
   }
 }
 // Register
-function* registerWatch(){
+function* registerWatch() {
   yield takeLatest(types.REGISTER_REQUEST, registerSaga);
 }
 
 function* registerSaga(action) {
   let { username, phoneNumber } = action.payload;
   try {
-    const { user, token } = yield call(() => API.register(username, phoneNumber));
+    const { user, token } = yield call(() =>
+      API.register(username, phoneNumber)
+    );
     yield put(actions.registerSuccess(user, token));
   } catch (error) {
     yield put(actions.registerFailure(error));
@@ -82,11 +98,59 @@ function* listMessagesWatch() {
 
 function* listMessagesSaga(action) {
   try {
-    console.log(action);
     let { roomId } = action.payload;
     const { messages } = yield call(() => API.listMessages(roomId));
     yield put(actions.listMessagesSuccess(messages));
   } catch (error) {
     yield put(actions.listMessagesFailure(error));
   }
+}
+
+/*================================================================================
+Socket IO
+================================================================================*/
+
+function* socketIO() {
+  try {
+    const socket = yield call(connect);
+    yield all([
+      yield fork(read, socket),
+      yield fork(write, socket, types.SELECT_ROOM, "room"),
+      yield fork(write, socket, types.SEND_MESSAGE, "message"),
+    ])
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function* write(socket, actionType, messageType) {
+  try {
+    yield takeEvery(actionType, action => call(action => socket.emit(messageType, action.payload), action));
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function* read(socket) {
+  try {
+    const channel = yield call(subscribe, socket);
+    while (true) {
+      let action = yield take(channel);
+      yield put(action);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function subscribe(socket) {
+  return eventChannel(emit => {
+    socket.on("message", message => {
+      emit(actions.receiveMessage(message));
+    });
+    socket.on("disconnect", e => {
+      // TODO: handle
+    });
+    return () => { };
+  });
 }

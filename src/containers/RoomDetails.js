@@ -6,15 +6,36 @@ import { connect } from "react-redux";
 import * as actions from "./../actions/actions";
 
 class RoomDetails extends Component {
-  componentWillMount(){
+  componentWillMount() {
+    this.listMessages();
+  }
+  listMessages() {
     this.props.listMessages(this.props.room._id);
   }
-  renderMessages(messages){  
-    return messages.map((message, index) => <Message key={index} message={message} index={index} /> );
+  renderMessages(messages) {
+    return messages.map((message, index) => <Message key={index} message={message} index={index} />);
+  }
+  renderSendMessage() {
+    let { newMessage, room, user } = this.props
+    return (
+      <KeyboardAvoidingView behavior="padding">
+        <View>
+          <TextInput
+            value={newMessage}
+            underlineColorAndroid="transparent"
+            placeholder="Type something nice"
+            onChangeText={text => this.props.updateNewMessage(text)}
+          />
+          <TouchableOpacity onPress={() => this.props.sendMessage(newMessage, room._id, user._id)}>
+            <Text>Send</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    );
   }
   render() {
-    let { room, messages, messagesXHR, newMessage } = this.props;
-   
+    let { room, messages, messagesXHR } = this.props;
+
     return (
       <View>
         <View>
@@ -28,41 +49,26 @@ class RoomDetails extends Component {
         <ScrollView ref={ref => this.roomMessages = ref}
           refreshControl={<RefreshControl
             refreshing={messagesXHR}
-            onRefresh={() => this.listMessages(this.state.currentRoom)}
+            onRefresh={() => this.listMessages()}
           />}>}
         >
         {this.renderMessages(messages)}
         </ScrollView>
-        <KeyboardAvoidingView behavior="padding">
-          <View>
-            <TextInput
-              value={newMessage}
-            
-              underlineColorAndroid="transparent"
-              placeholder="Type something nice"
-              onChangeText={text => this.setState({ newMessage: text })}
-            />
-            <TouchableOpacity onPress={() => this.sendMessage()}>
-              <Text>Send</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+        {this.renderSendMessage()}
       </View>
     );
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  login: (username, phoneNumber) => dispatch(actions.loginRequest(username, phoneNumber)),
-  register: (username, phoneNumber) => dispatch(actions.registerRequest(username, phoneNumber)),
-  createRoom: (title) => dispatch(actions.createRoomRequest(title)),
-  listRooms: () => dispatch(actions.listRoomsRequest()),
-  selectRoom: (room) => dispatch(actions.selectRoom(room)),
-  listMessages: (roomId) => dispatch(actions.listMessagesRequest(roomId)),
+  listMessages: roomId => dispatch(actions.listMessagesRequest(roomId)),
+  updateNewMessage: newMessage => dispatch(actions.updateNewMessage(newMessage)),
+  sendMessage: (message, roomId, ownerId) => dispatch(actions.sendMessage(message, roomId, ownerId)),
 });
 
 const mapStateToProps = state => {
   return {
+    user: state.user,
     room: state.room,
     messages: state.messages,
     messagesXHR: state.messagesXHR,
@@ -75,5 +81,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(RoomDetails);
-
-

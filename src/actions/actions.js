@@ -10,7 +10,40 @@ export function selectRoom(room){
     payload: {
       room,
     },
-  }
+  };
+}
+
+
+/*================================================================================
+Messages
+================================================================================*/
+export function sendMessage(content, roomId, ownerId){
+  return {
+    type: types.SEND_MESSAGE,
+    payload: {
+      content: content,
+      roomId: roomId,
+      ownerId: ownerId,
+    },
+  };
+}
+
+export function receiveMessage(message){
+  return {
+    type: types.RECEIVE_MESSAGE,
+    payload: {
+      message,
+    },
+  };
+}
+
+export function updateNewMessage(newMessage){
+  return {
+    type: types.UPDATE_NEW_MESSAGE,
+    payload: {
+      newMessage,
+    },
+  };
 }
 
 

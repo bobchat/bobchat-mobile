@@ -7,6 +7,7 @@ import * as actions from './../actions/actions'
 
 class Rooms extends Component {
   componentWillMount(){
+    this.props.login('sam', '4062104444');
     this.props.listRooms();
   }
   render() {

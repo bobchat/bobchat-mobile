@@ -3,7 +3,20 @@
 Navigation
 ================================================================================*/
 
+// Select Room
 export const SELECT_ROOM = 'SELECT_ROOM';
+
+/*================================================================================
+Messages
+================================================================================*/
+
+// Send Message
+export const SEND_MESSAGE = 'SEND_MESSAGE';
+
+// Receive Message
+export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
+
+export const UPDATE_NEW_MESSAGE = 'UPDATE_NEW_MESSAGE';
 
 /*================================================================================
 Requests
@@ -33,5 +46,3 @@ export const LIST_ROOMS_FAILURE = 'LIST_ROOMS_FAILURE';
 export const LIST_MESSAGES_REQUEST = 'LIST_MESSAGES_REQUEST';
 export const LIST_MESSAGES_SUCCESS = 'LIST_MESSAGES_SUCCESS';
 export const LIST_MESSAGES_FAILURE = 'LIST_MESSAGES_FAILURE';
-
-

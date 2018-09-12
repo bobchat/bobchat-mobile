@@ -4,6 +4,7 @@ function initialState() {
   return {
     // User
     user: null,
+    token: null,
     // Rooms
     rooms: [],
     roomsXHR: false,
@@ -22,10 +23,45 @@ export default function reducer(state, action) {
   let { type, payload } = action;
   switch (type) {
 
+    case types.REGISTER_SUCCESS:
+      return {
+        ...state,
+        user: payload.user,
+        token: payload.token,
+      };
+
+    case types.LOGIN_SUCCESS:
+      return {
+        ...state,
+        user: payload.user,
+        token: payload.token,
+      };
+
     case types.SELECT_ROOM:
       return {
         ...state,
         room: payload.room,
+      };
+
+
+    case types.UPDATE_NEW_MESSAGE:
+      return {
+        ...state,
+        newMessage: payload.newMessage
+      };
+
+    case types.SEND_MESSAGE:
+      return {
+        ...state,
+        newMessage: ''
+      };
+
+    case types.RECEIVE_MESSAGE:
+      let messages = state.messages.splice(0);
+      messages.push(payload.message);
+      return {
+        ...state,
+        messages,
       };
 
     // List Messages
@@ -76,6 +112,6 @@ export default function reducer(state, action) {
       };
 
     default:
-      return initialState()
+      return initialState();
   }
 }
