@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const SOCKET_URL = 'http://10.0.0.4:8080';
+const SOCKET_URL = "http://192.168.1.36:8080";
 
 export default function connect() {
   const socket = io(SOCKET_URL);

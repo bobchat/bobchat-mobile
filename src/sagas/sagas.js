@@ -1,11 +1,11 @@
-import { eventChannel } from "redux-saga";
-import { takeLatest, call, put, all, take, fork, takeEvery} from "redux-saga/effects";
-import Client from "./../lib/client";
-import connect from "./../lib/connect";
-import * as types from "./../actions/types";
-import * as actions from "./../actions/actions";
+import { eventChannel } from 'redux-saga';
+import { takeLatest, call, put, all, take, fork, takeEvery} from 'redux-saga/effects';
+import Client from './../lib/client';
+import connect from './../lib/connect';
+import * as types from './../actions/types';
+import * as actions from './../actions/actions';
 
-let API = new Client("http://localhost:8080");
+let API = new Client('http://192.168.1.36:8080');
 let socket;
 
 (async () => {
@@ -115,8 +115,8 @@ function* socketIO() {
     const socket = yield call(connect);
     yield all([
       yield fork(read, socket),
-      yield fork(write, socket, types.SELECT_ROOM, "room"),
-      yield fork(write, socket, types.SEND_MESSAGE, "message"),
+      yield fork(write, socket, types.SELECT_ROOM, 'room'),
+      yield fork(write, socket, types.SEND_MESSAGE, 'message'),
     ])
   } catch (e) {
     console.error(e);
@@ -145,10 +145,10 @@ function* read(socket) {
 
 function subscribe(socket) {
   return eventChannel(emit => {
-    socket.on("message", message => {
+    socket.on('message', message => {
       emit(actions.receiveMessage(message));
     });
-    socket.on("disconnect", e => {
+    socket.on('disconnect', e => {
       // TODO: handle
     });
     return () => { };

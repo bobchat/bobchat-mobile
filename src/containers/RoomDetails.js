@@ -38,21 +38,11 @@ class RoomDetails extends Component {
 
     return (
       <View>
-        <View>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate(Screens.ROOMS)}>
-            <Text>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-        <View>
-          <Text>{room.title}</Text>
-        </View>
-        <ScrollView ref={ref => this.roomMessages = ref}
-          refreshControl={<RefreshControl
-            refreshing={messagesXHR}
-            onRefresh={() => this.listMessages()}
-          />}>}
-        >
-        {this.renderMessages(messages)}
+        <ScrollView refreshControl={<RefreshControl
+          refreshing={messagesXHR}
+          onRefresh={() => this.listMessages()}
+        />}>}}>
+          {this.renderMessages(messages)}
         </ScrollView>
         {this.renderSendMessage()}
       </View>

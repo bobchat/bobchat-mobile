@@ -14,7 +14,7 @@ function initialState() {
     messages: [],
     messagesXHR: false,
     messagesError: null,
-    newMessage: "",
+    newMessage: '',
     socket: null,
   };
 }

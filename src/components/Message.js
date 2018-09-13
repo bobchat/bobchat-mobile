@@ -3,12 +3,10 @@ import { View, Text } from "react-native";
 
 export default class Message extends Component {
   render(){
-    let { message } = this.props;
+    let { message, index } = this.props;
     return (
-      <View>
-        <View>
-          <Text>{message.content}</Text>
-        </View>
+      <View key={index}>
+        <Text>{message.content}</Text>
       </View>
     );
   }
