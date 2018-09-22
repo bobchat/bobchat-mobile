@@ -37,9 +37,10 @@ class Client {
     throw msg;
   }
   // Requests
-  get(slug = "", headers = {}) {
+  get(slug = "", query = {}, headers = {}) {
     return request
       .get(this._getUrl(slug))
+      .query(query)
       .set({
         ...headers,
         ...this._defaultHeaders()
@@ -77,11 +78,10 @@ class Client {
       .catch(this._handleHTTPError);
   }
   // Authentication
-  login(username, phoneNumber) {
-    return this.post("/user/login", {
-      username,
-      phoneNumber
-    })
+  getToken(deviceUniqueId = '') {
+    return this.get("/user/token", {
+        deviceUniqueId,
+      })
       .then(res => {
         this._setToken(res.body.token);
         return res;
@@ -91,36 +91,23 @@ class Client {
       })
       .catch(this._handleError);
   }
-  register(username, phoneNumber) {
-    return this.post("/user/register", {
-      username,
-      phoneNumber
-    })
-      .then(res => {
-        // this._setToken(res.body.token);
-        return res;
-      })
-      .then(res => {
-        return res.body;
-      })
-      .catch(this._handleError);
-  }
   // Rooms
-  createRoom(title, owner) {
-    return this.post("/room/new", {
-      title,
-      owner
-    })
+  createRoom(newRoom = {}) {
+    return this.post("/room/new", newRoom)
       .then(res => res.body)
       .catch(this._handleError);
   }
-  listRooms() {
-    return this.get("/room/list")
+  listRooms(lat, lng) {
+    console.log(lat, lng);
+    return this.get("/room/list", {
+      lat,
+      lng,
+    })
       .then(res => res.body)
       .catch(this._handleError);
   }
   // Messages
-  listMessages(roomId){
+  listMessages(roomId) {
     console.log()
     return this.get(`/message/list/${roomId}`)
       .then(res => res.body)

@@ -4,23 +4,23 @@ import Client from './../lib/client';
 import connect from './../lib/connect';
 import * as types from './../actions/types';
 import * as actions from './../actions/actions';
+import * as NavigationService from './../navigation/NavigationService';
+import {
+  REST_API_URL
+} from './../../env';
 
-let API = new Client('http://192.168.1.36:8080');
-let socket;
-
-(async () => {
-  socket = await connect();
-})();
+let API = new Client(REST_API_URL);
 
 export default function* rootSaga() {
   try {
     yield all([
-      loginWatch(),
-      registerWatch(),
+      getTokenWatch(),
       createRoomWatch(),
+      createRoomSuccessWatch(),
+      selectRoomWatch(),
       listRoomsWatch(),
       listMessagesWatch(),
-      socketIO()
+      socketIO(),
     ]);
   } catch (e) {
     console.error(e);
@@ -32,35 +32,20 @@ API Requests
 ================================================================================*/
 
 // Login
-function* loginWatch() {
-  yield takeLatest(types.LOGIN_REQUEST, loginSaga);
+function* getTokenWatch() {
+  yield takeLatest(types.GET_TOKEN_REQUEST, getTokenSaga);
 }
 
-function* loginSaga(action) {
-  let { username, phoneNumber } = action.payload;
+function* getTokenSaga(action) {
+  let { deviceUniqueId } = action.payload;
   try {
-    const { user, token } = yield call(() => API.login(username, phoneNumber));
-    yield put(actions.loginSuccess(user, token));
+    const { user, token } = yield call(() => API.getToken(deviceUniqueId));
+    yield put(actions.getTokenSuccess(user, token));
   } catch (error) {
-    yield put(actions.loginFailure(error));
+    yield put(actions.getTokenFailure(error));
   }
-}
-// Register
-function* registerWatch() {
-  yield takeLatest(types.REGISTER_REQUEST, registerSaga);
 }
 
-function* registerSaga(action) {
-  let { username, phoneNumber } = action.payload;
-  try {
-    const { user, token } = yield call(() =>
-      API.register(username, phoneNumber)
-    );
-    yield put(actions.registerSuccess(user, token));
-  } catch (error) {
-    yield put(actions.registerFailure(error));
-  }
-}
 
 // Create Room
 function* createRoomWatch() {
@@ -68,13 +53,32 @@ function* createRoomWatch() {
 }
 
 function* createRoomSaga(action) {
-  let { title } = action.payload;
+  let newRoom = action.payload;
   try {
-    const { room } = yield call(() => API.createRoom(title));
+    const { room } = yield call(() => API.createRoom(newRoom));
     yield put(actions.createRoomSuccess(room));
   } catch (error) {
     yield put(actions.createRoomFailure(error));
   }
+}
+
+
+function* createRoomSuccessWatch() {
+  yield takeLatest(types.CREATE_ROOM_SUCCESS, createRoomSuccessSaga);
+}
+
+function* createRoomSuccessSaga(action) {
+  let { room } = action.payload;
+  yield put(actions.selectRoom(room));
+  yield put(actions.listRoomsRequest());
+}
+
+function* selectRoomWatch(){
+  yield takeLatest(types.SELECT_ROOM, selectRoomSaga); 
+}
+
+function* selectRoomSaga(){
+  yield call(() => NavigationService.navigate('RoomDetails'))  
 }
 
 // List Rooms
@@ -82,9 +86,10 @@ function* listRoomsWatch() {
   yield takeLatest(types.LIST_ROOMS_REQUEST, listRoomsSaga);
 }
 
-function* listRoomsSaga() {
+function* listRoomsSaga(action) {
+  const {lat, lng} = action.payload;
   try {
-    const { rooms } = yield call(() => API.listRooms());
+    const { rooms } = yield call(() => API.listRooms(lat, lng));
     yield put(actions.listRoomsSuccess(rooms));
   } catch (error) {
     yield put(actions.listRoomsFailure(error));

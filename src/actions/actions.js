@@ -1,32 +1,21 @@
-import * as types from "./../actions/types";
+import * as types from "./types";
 
 /*================================================================================
-Register
+Get Token
 ================================================================================*/
 
-export function setRegisterField(key, value) {
+export function getTokenRequest(deviceUniqueId) {
   return {
-    type: types.SET_REGISTER_FIELD,
+    type: types.GET_TOKEN_REQUEST,
     payload: {
-      key,
-      value,
-    },
-  };
-}
-
-export function registerRequest(username, phoneNumber) {
-  return {
-    type: types.REGISTER_REQUEST,
-    payload: {
-      username,
-      phoneNumber
+      deviceUniqueId, 
     }
   };
 }
 
-export function registerSuccess(user, token) {
+export function getTokenSuccess(user, token) {
   return {
-    type: types.REGISTER_SUCCESS,
+    type: types.GET_TOKEN_SUCCESS,
     payload: {
       user,
       token,
@@ -34,42 +23,9 @@ export function registerSuccess(user, token) {
   };
 }
 
-export function registerFailure(error) {
+export function getTokenFailure(error) {
   return {
-    type: types.REGISTER_FAILURE,
-    payload: {
-      error,
-    }
-  };
-}
-
-/*================================================================================
-Login
-================================================================================*/
-
-export function loginRequest(username, phoneNumber) {
-  return {
-    type: types.LOGIN_REQUEST,
-    payload: {
-      username,
-      phoneNumber
-    }
-  };
-}
-
-export function loginSuccess(user, token) {
-  return {
-    type: types.LOGIN_SUCCESS,
-    payload: {
-      user,
-      token,
-    }
-  };
-}
-
-export function loginFailure(error) {
-  return {
-    type: types.LOGIN_FAILURE,
+    type: types.GET_TOKEN_FAILURE,
     payload: {
       error,
     }
@@ -80,10 +36,33 @@ export function loginFailure(error) {
 Rooms
 ================================================================================*/
 
-export function listRoomsRequest() {
+export function updateNewRoomField(key, value){
+  return {
+    type: types.UPDATE_NEW_ROOM_FIELD,
+    payload: {
+      key,
+      value,
+    },
+  };
+}
+
+
+export function resetNewRoomFields() {
+  return {
+    type: types.RESET_NEW_ROOM_FIELDS,
+    payload: {},
+  };
+}
+
+export function listRoomsRequest(lat, lng, radius, units) {
   return {
     type: types.LIST_ROOMS_REQUEST,
-    payload: {}
+    payload: {
+      lat,
+      lng,
+      radius,
+      units,
+    }
   };
 }
 
@@ -105,12 +84,10 @@ export function listRoomsFailure(error) {
   };
 }
 
-export function createRoomRequest(title) {
+export function createRoomRequest(newRoom) {
   return {
     type: types.CREATE_ROOM_REQUEST,
-    payload: {
-      title
-    }
+    payload: newRoom,
   };
 }
 
@@ -140,6 +117,16 @@ export function selectRoom(room) {
     },
   };
 }
+
+export function clearSelectedRoom() {
+  return {
+    type: types.CLEAR_SELECTED_ROOM,
+    payload: {
+      room: null
+    },
+  };
+}
+
 
 /*================================================================================
 Messages

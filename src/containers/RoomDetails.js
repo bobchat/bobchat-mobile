@@ -6,17 +6,21 @@ import { connect } from "react-redux";
 import * as actions from "./../actions/actions";
 
 class RoomDetails extends Component {
-  componentWillMount() {
+  componentDidMount(){
     this.listMessages();
   }
-  listMessages() {
-    this.props.listMessages(this.props.room._id);
+  listMessages() { 
+    this.props.listMessages(this.props.room.room._id);
   }
   renderMessages(messages) {
-    return messages.map((message, index) => <Message key={index} message={message} index={index} />);
+    return messages.map((message, index) => (
+      <Message key={index} message={message} index={index} />
+    ));
   }
   renderSendMessage() {
-    let { newMessage, room, user } = this.props
+    let { user } = this.props.auth;
+    let { newMessage } = this.props.message;
+    let { room } = this.props.room;
     return (
       <KeyboardAvoidingView behavior="padding">
         <View>
@@ -26,7 +30,11 @@ class RoomDetails extends Component {
             placeholder="Type something nice"
             onChangeText={text => this.props.updateNewMessage(text)}
           />
-          <TouchableOpacity onPress={() => this.props.sendMessage(newMessage, room._id, user._id)}>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.sendMessage(newMessage, room._id, user._id)
+            }
+          >
             <Text>Send</Text>
           </TouchableOpacity>
         </View>
@@ -34,14 +42,19 @@ class RoomDetails extends Component {
     );
   }
   render() {
-    let { room, messages, messagesXHR } = this.props;
-
+    let { messages, messagesXHR } = this.props.message;
+    console.log(this.props.room.room._id);
     return (
       <View>
-        <ScrollView refreshControl={<RefreshControl
-          refreshing={messagesXHR}
-          onRefresh={() => this.listMessages()}
-        />}>}}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={messagesXHR}
+              onRefresh={() => this.listMessages()}
+            />
+          }
+        >
+          }}>
           {this.renderMessages(messages)}
         </ScrollView>
         {this.renderSendMessage()}
@@ -58,12 +71,9 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => {
   return {
-    user: state.user,
+    auth: state.auth,
     room: state.room,
-    messages: state.messages,
-    messagesXHR: state.messagesXHR,
-    messagesError: state.messagesError,
-    newMessage: state.newMessage,
+    message: state.message,
   };
 };
 

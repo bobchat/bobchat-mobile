@@ -1,10 +1,15 @@
 
 /*================================================================================
-Navigation
+Rooms
 ================================================================================*/
 
+// New Room
+export const UPDATE_NEW_ROOM_FIELD = 'UPDATE_NEW_ROOM_FIELD';
+export const RESET_NEW_ROOM_FIELDS = 'RESET_NEW_ROOM_FIELDS';
 // Select Room
 export const SELECT_ROOM = 'SELECT_ROOM';
+export const CLEAR_SELECTED_ROOM = 'CLEAR_SELECTED_ROOM';
+
 
 /*================================================================================
 Messages
@@ -22,16 +27,10 @@ export const UPDATE_NEW_MESSAGE = 'UPDATE_NEW_MESSAGE';
 Requests
 ================================================================================*/
 
-// Login
-export const LOGIN_REQUEST = 'LOGIN_REQUEST';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAILURE = 'LOGIN_FAILURE';
-
-// Register
-export const SET_REGISTER_FIELD = 'SET_REGISTER_FIELD';
-export const REGISTER_REQUEST = 'REGISTER_REQUEST';
-export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
-export const REGISTER_FAILURE = 'REGISTER_FAILURE';
+// Get Token
+export const GET_TOKEN_REQUEST = 'GET_TOKEN_REQUEST';
+export const GET_TOKEN_SUCCESS = 'GET_TOKEN_SUCCESS';
+export const GET_TOKEN_FAILURE = 'GET_TOKEN_FAILURE';
 
 // Create room
 export const CREATE_ROOM_REQUEST = 'CREATE_ROOM_REQUEST';

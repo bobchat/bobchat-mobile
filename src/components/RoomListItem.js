@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, View, Text } from 'react-native';
 import { Card } from "react-native-elements";
-import { timeSince } from './../lib/timeFormat';
+import { timeSince } from '../lib/time';
 import { Screens } from './../navigation/Navigation';
 import styles from './../styles/RoomListItemStyle';
 
 export default class RoomListItem extends Component {
   selectRoom(room){
     this.props.selectRoom(room);
-    this.props.navigate(Screens.ROOM_DETAILS);
   }
   render() {
     let { room } = this.props;

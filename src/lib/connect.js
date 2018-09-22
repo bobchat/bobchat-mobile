@@ -1,9 +1,8 @@
 import io from "socket.io-client";
-
-const SOCKET_URL = "http://192.168.1.36:8080";
+import { WEBSOCKET_URL } from "./../../env";
 
 export default function connect() {
-  const socket = io(SOCKET_URL);
+  const socket = io(WEBSOCKET_URL);
   return new Promise(resolve => {
     socket.on('connect', () => {
       resolve(socket);

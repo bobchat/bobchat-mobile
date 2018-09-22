@@ -9,7 +9,7 @@ import styles from './../styles/RoomStyle';
 
 
 class RoomsHeader extends Component {
-  render(){
+  render() {
     return (
       <View style={{
         display: 'flex',
@@ -49,14 +49,14 @@ class RoomsHeader extends Component {
           alignItems: 'center',
         }}>
           <Icon name='new-message'
-                type='entypo'
-                containerStyle={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                  flex: 1,
-                }}
-                iconStyle={{color: 'white', marginLeft: 30}} />
+            type='entypo'
+            containerStyle={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              flex: 1,
+            }}
+            iconStyle={{ color: 'white', marginLeft: 30 }} />
         </View>
       </View>
     );
@@ -64,7 +64,7 @@ class RoomsHeader extends Component {
 }
 
 class Rooms extends Component {
-  
+
   static navigationOptions = {
     headerTitle: RoomsHeader,
     headerStyle: styles.headerStyle,
@@ -75,8 +75,8 @@ class Rooms extends Component {
   };
 
   componentWillMount() {
-    this.props.login("sam", "4062104444");
-    this.props.listRooms();
+    this.props.getToken('0123456789');
+    // this.props.listRooms();
   }
   render() {
     return (
@@ -104,24 +104,18 @@ class Rooms extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  login: (username, phoneNumber) => dispatch(actions.loginRequest(username, phoneNumber)),
-  register: (username, phoneNumber) => dispatch(actions.registerRequest(username, phoneNumber)),
-  createRoom: (title) => dispatch(actions.createRoomRequest(title)),
+  getToken: deviceUniqueId => dispatch(actions.getTokenRequest(deviceUniqueId)),
   listRooms: () => dispatch(actions.listRoomsRequest()),
-  selectRoom: (room) => dispatch(actions.selectRoom(room)),
-  listMessage: (roomId) => dispatch(actions.listMessageRequest(roomId)),
+  selectRoom: room => dispatch(actions.selectRoom(room))
 });
 
 const mapStateToProps = state => {
   return {
     user: state.user,
+    token: state.token,
     rooms: state.rooms,
     roomsXHR: state.roomsXHR,
     roomsError: state.roomsError,
-    selectedRoom: state.selectedRoom,
-    currentMessages: state.currentMessages,
-    newMessage: state.newMessage,
-    socket: state.socket,
   };
 };
 
