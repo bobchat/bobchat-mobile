@@ -127,6 +127,64 @@ export function clearSelectedRoom() {
   };
 }
 
+export function upVoteRoom(roomId, userId) {
+  return {
+    type: types.UP_VOTE_ROOM_REQUEST,
+    payload: {
+      roomId,
+      userId,
+    },
+  };
+}
+
+export function upVoteRoomSuccess(user, room) {
+  return {
+    type: types.UP_VOTE_ROOM_SUCCESS,
+    payload: {
+      user,
+      room,
+    },
+  };
+}
+
+export function upVoteRoomFailure(error) {
+  return {
+    type: types.UP_VOTE_ROOM_FAILURE,
+    payload: {
+      error
+    }
+  };
+}
+
+export function downVoteRoom(roomId, userId) {
+  return {
+    type: types.DOWN_VOTE_ROOM_REQUEST,
+    payload: {
+      roomId,
+      userId,
+    },
+  };
+}
+
+export function downVoteRoomSuccess(user, room) {
+  return {
+    type: types.DOWN_VOTE_ROOM_SUCCESS,
+    payload: {
+      user,
+      room,
+    },
+  };
+}
+
+export function downVoteRoomFailure(error) {
+  return {
+    type: types.DOWN_VOTE_ROOM_FAILURE,
+    payload: {
+      error
+    }
+  };
+}
+
 
 /*================================================================================
 Messages

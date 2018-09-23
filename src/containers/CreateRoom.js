@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styles from './styles/CreateRoomStyle';
-import { TouchableOpacity, View, Text, Button, TextInput } from "react-native";
+import { TouchableOpacity, ScrollView, View, Text, Button, TextInput } from "react-native";
 import * as actions from "../actions/actions";
 import { connect } from 'react-redux'
 import { Slider } from "react-native-elements";
@@ -83,13 +83,13 @@ class CreateRoom extends Component {
   render() {
     let { title, radius, units, expiresIn, alias } = this.props.room.newRoom;
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         {this.renderTitle(title)}
         {this.renderRadius(radius, units)}
         {this.renderExpiresIn(expiresIn)}
         {this.renderAlias(alias)}
         {this.renderButton()}
-      </View>
+      </ScrollView>
     );
   }
 }

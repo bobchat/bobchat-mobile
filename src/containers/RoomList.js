@@ -92,11 +92,35 @@ class Rooms extends Component {
     const lng = location.coords.longitude;
     this.props.listRooms(lat, lng);
   }
+  renderRoomList(rooms){
+    if(!rooms.length) {
+      return (
+        <View>
+          <Text>No Rooms. Pull to refresh</Text>
+        </View>
+      );
+    }
+    
+    return rooms.map((room, index) => (
+      <RoomListItem
+        key={index}
+        auth={this.props.auth}
+        room={room}
+        selectRoom={this.props.selectRoom}
+        upVoteRoom={this.props.upVoteRoom}
+        downVoteRoom={this.props.downVoteRoom}
+        navigate={this.props.navigation.navigate}
+      />
+    ));
+  }
   render() {
     const {rooms, roomsXHR, roomsError} = this.props.room;
     return (
       <View>
         <ScrollView
+          style={{
+            height: '100%',
+          }}
           refreshControl={
             <RefreshControl
               refreshing={roomsXHR}
@@ -104,14 +128,7 @@ class Rooms extends Component {
             />
           }
         >
-          {rooms.map((room, index) => (
-            <RoomListItem
-              key={index}
-              room={room}
-              selectRoom={this.props.selectRoom}
-              navigate={this.props.navigation.navigate}
-            />
-          ))}
+        {this.renderRoomList(rooms)}
         </ScrollView>
       </View>
     );
@@ -121,7 +138,9 @@ class Rooms extends Component {
 const mapDispatchToProps = dispatch => ({
   getToken: deviceUniqueId => dispatch(actions.getTokenRequest(deviceUniqueId)),
   listRooms: (lat, lng, radius, units) => dispatch(actions.listRoomsRequest(lat, lng, radius, units)),
-  selectRoom: room => dispatch(actions.selectRoom(room))
+  selectRoom: room => dispatch(actions.selectRoom(room)),
+  upVoteRoom: (roomId, userId) => dispatch(actions.upVoteRoom(roomId, userId)),
+  downVoteRoom: (roomId, userId) => dispatch(actions.downVoteRoom(roomId, userId)),
 });
 
 const mapStateToProps = state => {

@@ -2,6 +2,11 @@ import * as types from "./../actions/types";
 import { HOUR } from './../lib/time'
 
 
+function removeElement(array, el){
+  array = array.splice(0);
+  return array.filter(arEl => arEl != el);
+}
+
 function newRoomState(){
   return {
     title: '',
@@ -27,13 +32,56 @@ function roomState() {
 
 export default function roomReducer(state = roomState(), action) {
   let { type, payload } = action;
-  console.log(type);
+  
   switch (type) {
     case types.UPDATE_NEW_ROOM_FIELD:
       return { ...state, newRoom: { ...state.newRoom, [payload.key]: payload.value } };
 
     case types.RESET_NEW_ROOM_FIELDS:
       return {...state, newRoom: newRoomState()};
+
+    case types.UP_VOTE_ROOM_REQUEST:
+      rooms = state.rooms.map(room => {
+        if(room._id == payload.roomId) {
+
+          let isUpVoted = room.upVoteUserIds.includes(payload.userId);
+          let isDownVoted = room.downVoteUserIds.includes(payload.userId)
+          if(isUpVoted) return room;
+      
+          if (isDownVoted) {
+            room.downVoteUserIds = removeElement(room.downVoteUserIds, payload.userId);  
+          } else {
+            room.upVoteUserIds.push(payload.userId);
+          }
+          return room;
+        } else return room;
+      });
+      return {
+        ...state,
+        rooms,
+      };
+
+    case types.DOWN_VOTE_ROOM_REQUEST:
+      rooms = state.rooms.map(room => {
+        if (room._id == payload.roomId) {
+
+          let isUpVoted = room.upVoteUserIds.includes(payload.userId);
+          let isDownVoted = room.downVoteUserIds.includes(payload.userId)
+          if (isDownVoted) return room;
+
+          if (isUpVoted) {
+            room.upVoteUserIds = removeElement(room.upVoteUserIds, payload.userId);
+          } else {
+            room.downVoteUserIds.push(payload.userId);
+          }
+          return room;
+        } else return room;
+      });
+      return {
+        ...state,
+        rooms,
+      };
+      
 
     case types.SELECT_ROOM:
       return { ...state, room: payload.room };

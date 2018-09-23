@@ -78,14 +78,33 @@ class Client {
       .catch(this._handleHTTPError);
   }
   // Authentication
-  getToken(deviceUniqueId = '') {
+  getToken(deviceUniqueId = "") {
     return this.get("/user/token", {
-        deviceUniqueId,
-      })
+      deviceUniqueId
+    })
       .then(res => {
         this._setToken(res.body.token);
         return res;
       })
+      .then(res => {
+        return res.body;
+      })
+      .catch(this._handleError);
+  }
+  // Vote
+  upVoteRoom(roomId) {
+    return this.post("/room/up-vote", {
+      roomId
+    })
+      .then(res => {
+        return res.body;
+      })
+      .catch(this._handleError);
+  }
+  downVoteRoom(roomId) {
+    return this.post("/room/down-vote", {
+      roomId
+    })
       .then(res => {
         return res.body;
       })
@@ -101,14 +120,15 @@ class Client {
     console.log(lat, lng);
     return this.get("/room/list", {
       lat,
-      lng,
+      lng
     })
-      .then(res => res.body)
+      .then(res => {
+        return res.body;
+      })
       .catch(this._handleError);
   }
   // Messages
   listMessages(roomId) {
-    console.log()
     return this.get(`/message/list/${roomId}`)
       .then(res => res.body)
       .catch(this._handleError);

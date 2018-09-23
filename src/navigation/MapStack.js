@@ -4,8 +4,6 @@ import { createStackNavigator } from 'react-navigation';
 import RoomMap from '../containers/RoomMap';
 import BackButton from './../components/BackButton'
 
-console.log(RoomMap);
-
 const MapStack = createStackNavigator(
   {
     RoomMap: {

@@ -4,6 +4,7 @@ import Message from "./../components/Message";
 import { Screens } from "./../navigation/Navigation";
 import { connect } from "react-redux";
 import * as actions from "./../actions/actions";
+import RoomListItem from "./../components/RoomListItem";
 
 class RoomDetails extends Component {
   componentDidMount(){
@@ -42,19 +43,17 @@ class RoomDetails extends Component {
     );
   }
   render() {
+    let { room } = this.props.room;
     let { messages, messagesXHR } = this.props.message;
-    console.log(this.props.room.room._id);
+    
     return (
       <View>
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={messagesXHR}
-              onRefresh={() => this.listMessages()}
-            />
-          }
-        >
-          }}>
+        <RoomListItem room={room} />
+        <ScrollView refreshControl={
+          <RefreshControl
+            refreshing={messagesXHR}
+            onRefresh={() => this.listMessages()}
+          />}>
           {this.renderMessages(messages)}
         </ScrollView>
         {this.renderSendMessage()}

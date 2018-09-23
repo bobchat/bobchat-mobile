@@ -20,6 +20,8 @@ export default function* rootSaga() {
       selectRoomWatch(),
       listRoomsWatch(),
       listMessagesWatch(),
+      upVoteRoomWatch(),
+      downVoteRoomWatch(),
       socketIO(),
     ]);
   } catch (e) {
@@ -70,7 +72,6 @@ function* createRoomSuccessWatch() {
 function* createRoomSuccessSaga(action) {
   let { room } = action.payload;
   yield put(actions.selectRoom(room));
-  yield put(actions.listRoomsRequest());
 }
 
 function* selectRoomWatch(){
@@ -93,6 +94,36 @@ function* listRoomsSaga(action) {
     yield put(actions.listRoomsSuccess(rooms));
   } catch (error) {
     yield put(actions.listRoomsFailure(error));
+  }
+}
+
+// Up Vote
+function* upVoteRoomWatch(){
+  yield takeLatest(types.UP_VOTE_ROOM_REQUEST, upVoteRoomSaga);
+}
+
+function* upVoteRoomSaga(action){
+  const { roomId } = action.payload;
+  try {
+    const { user, room } = yield call(() => API.upVoteRoom(roomId));
+    yield put(actions.upVoteRoomSuccess(user, room));
+  } catch (error) {
+    yield put(actions.upVoteRoomFailure(error));
+  }
+}
+
+// Down Vote
+function* downVoteRoomWatch() {
+  yield takeLatest(types.DOWN_VOTE_ROOM_REQUEST, downVoteRoomSaga);
+}
+
+function* downVoteRoomSaga(action) {
+  const { roomId } = action.payload;
+  try {
+    const { user, room } = yield call(() => API.downVoteRoom(roomId));
+    yield put(actions.downVoteRoomSuccess(user, room));
+  } catch (error) {
+    yield put(actions.downVoteRoomFailure(error));
   }
 }
 
