@@ -5,6 +5,7 @@ import { Screens } from "./../navigation/Navigation";
 import { connect } from "react-redux";
 import * as actions from "./../actions/actions";
 import RoomListItem from "./../components/RoomListItem";
+import styles from './styles/RoomDetailsStyle'
 
 class RoomDetails extends Component {
   componentDidMount(){
@@ -24,8 +25,9 @@ class RoomDetails extends Component {
     let { room } = this.props.room;
     return (
       <KeyboardAvoidingView behavior="padding">
-        <View>
+        <View style={styles.newMessageContainer}>
           <TextInput
+            style={styles.newMessageInput}
             value={newMessage}
             underlineColorAndroid="transparent"
             placeholder="Type something nice"
@@ -36,7 +38,9 @@ class RoomDetails extends Component {
               this.props.sendMessage(newMessage, room._id, user._id)
             }
           >
-            <Text>Send</Text>
+          <View style={styles.sendButton}>
+            <Text style={styles.sendButtonText}>Send</Text>
+          </View>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -48,7 +52,13 @@ class RoomDetails extends Component {
     
     return (
       <View>
-        <RoomListItem room={room} />
+        <RoomListItem
+          auth={this.props.auth}
+          room={room}
+          upVoteRoom={this.props.upVoteRoom}
+          downVoteRoom={this.props.downVoteRoom}
+          navigate={this.props.navigation.navigate}
+        />
         <ScrollView refreshControl={
           <RefreshControl
             refreshing={messagesXHR}
@@ -66,6 +76,8 @@ const mapDispatchToProps = dispatch => ({
   listMessages: roomId => dispatch(actions.listMessagesRequest(roomId)),
   updateNewMessage: newMessage => dispatch(actions.updateNewMessage(newMessage)),
   sendMessage: (message, roomId, ownerId) => dispatch(actions.sendMessage(message, roomId, ownerId)),
+  upVoteRoom: (roomId, userId) => dispatch(actions.upVoteRoom(roomId, userId)),
+  downVoteRoom: (roomId, userId) => dispatch(actions.downVoteRoom(roomId, userId)),
 });
 
 const mapStateToProps = state => {
