@@ -8,7 +8,6 @@ container: {
 messagesContainer: {
 },
  newMessageContainer: {
-   bottom: 0,
    backgroundColor: Color.white,
    display: 'flex',
    flexDirection: 'row',

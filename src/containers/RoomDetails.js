@@ -8,18 +8,18 @@ import RoomListItem from "./../components/RoomListItem";
 import styles from './styles/RoomDetailsStyle'
 
 class RoomDetails extends Component {
-  componentDidMount(){
+  componentDidMount() {
     this.listMessages();
-    setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), 400);
+    setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), 500);
   }
-  listMessages() { 
+  listMessages() {
     this.props.listMessages(this.props.room.room._id);
   }
-  sendMessage(newMessage, roomId, userId){
-    this.props.sendMessage(newMessage, roomId, userId)
-    setTimeout(() => this.scrollView.scrollToEnd({animated: true}), 200);
+  sendMessage(newMessage, roomId, userId) {
+    this.props.sendMessage(newMessage, roomId, userId);
+    setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), 200);
   }
-  renderRoomDetails(room){
+  renderRoomDetails(room) {
     return (
       <RoomListItem
         auth={this.props.auth}
@@ -32,50 +32,55 @@ class RoomDetails extends Component {
   }
   renderMessages(messages, messagesXHR) {
     return (
-      <ScrollView style={styles.messagesContainer} ref={ref => this.scrollView = ref} refreshControl={
-        <RefreshControl
-          refreshing={messagesXHR}
-          onRefresh={() => this.listMessages()}
-        />}>
+      <ScrollView
+        style={styles.messagesContainer}
+        ref={ref => (this.scrollView = ref)}
+        refreshControl={
+          <RefreshControl
+            refreshing={messagesXHR}
+            onRefresh={() => this.listMessages()}
+          />
+        }
+      >
         {messages.map((message, index) => (
           <Message key={index} message={message} index={index} />
         ))}
       </ScrollView>
-    )
+    );
   }
   renderSendMessage() {
     let { user } = this.props.auth;
     let { newMessage } = this.props.message;
     let { room } = this.props.room;
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.newMessageContainer}>
-        
-          <TextInput
-            style={styles.newMessageInput}
-            value={newMessage}
-            underlineColorAndroid="transparent"
-            placeholder="Type something nice"
-            onChangeText={text => this.props.updateNewMessage(text)}
-          />
-          <TouchableOpacity
-            onPress={() => this.sendMessage(newMessage, room._id, user._id)} >
+      <View style={styles.newMessageContainer}>
+        <TextInput
+          style={styles.newMessageInput}
+          value={newMessage}
+          underlineColorAndroid="transparent"
+          placeholder="Type something nice"
+          onChangeText={text => this.props.updateNewMessage(text)}
+        />
+        <TouchableOpacity
+          onPress={() => this.sendMessage(newMessage, room._id, user._id)}
+        >
           <View style={styles.sendButton}>
             <Text style={styles.sendButtonText}>Send</Text>
           </View>
-          </TouchableOpacity>
-      </KeyboardAvoidingView>
+        </TouchableOpacity>
+      </View>
     );
   }
   render() {
     let { room } = this.props.room;
     let { messages, messagesXHR } = this.props.message;
-    
+
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container}>
         {this.renderRoomDetails(room)}
         {this.renderMessages(messages, messagesXHR)}
         {this.renderSendMessage()}
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
