@@ -2,6 +2,11 @@ import { StyleSheet } from "react-native";
 import Color from './../../styles/theme//color'
 
 export default StyleSheet.create({
+container: {
+  flex: 1,
+},
+messagesContainer: {
+},
  newMessageContainer: {
    bottom: 0,
    backgroundColor: Color.white,
@@ -11,6 +16,8 @@ export default StyleSheet.create({
    height: 60,
    paddingLeft: 10,
    paddingRight: 10,
+   borderColor: Color.grey,
+   borderTopWidth: 1,
  },
  newMessageInput: {
   backgroundColor: Color.white,

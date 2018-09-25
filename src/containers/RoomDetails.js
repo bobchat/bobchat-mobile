@@ -10,22 +10,46 @@ import styles from './styles/RoomDetailsStyle'
 class RoomDetails extends Component {
   componentDidMount(){
     this.listMessages();
+    setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), 400);
   }
   listMessages() { 
     this.props.listMessages(this.props.room.room._id);
   }
-  renderMessages(messages) {
-    return messages.map((message, index) => (
-      <Message key={index} message={message} index={index} />
-    ));
+  sendMessage(newMessage, roomId, userId){
+    this.props.sendMessage(newMessage, roomId, userId)
+    setTimeout(() => this.scrollView.scrollToEnd({animated: true}), 200);
+  }
+  renderRoomDetails(room){
+    return (
+      <RoomListItem
+        auth={this.props.auth}
+        room={room}
+        upVoteRoom={this.props.upVoteRoom}
+        downVoteRoom={this.props.downVoteRoom}
+        navigate={this.props.navigation.navigate}
+      />
+    );
+  }
+  renderMessages(messages, messagesXHR) {
+    return (
+      <ScrollView style={styles.messagesContainer} ref={ref => this.scrollView = ref} refreshControl={
+        <RefreshControl
+          refreshing={messagesXHR}
+          onRefresh={() => this.listMessages()}
+        />}>
+        {messages.map((message, index) => (
+          <Message key={index} message={message} index={index} />
+        ))}
+      </ScrollView>
+    )
   }
   renderSendMessage() {
     let { user } = this.props.auth;
     let { newMessage } = this.props.message;
     let { room } = this.props.room;
     return (
-      <KeyboardAvoidingView behavior="padding">
-        <View style={styles.newMessageContainer}>
+      <KeyboardAvoidingView behavior="padding" style={styles.newMessageContainer}>
+        
           <TextInput
             style={styles.newMessageInput}
             value={newMessage}
@@ -34,15 +58,11 @@ class RoomDetails extends Component {
             onChangeText={text => this.props.updateNewMessage(text)}
           />
           <TouchableOpacity
-            onPress={() =>
-              this.props.sendMessage(newMessage, room._id, user._id)
-            }
-          >
+            onPress={() => this.sendMessage(newMessage, room._id, user._id)} >
           <View style={styles.sendButton}>
             <Text style={styles.sendButtonText}>Send</Text>
           </View>
           </TouchableOpacity>
-        </View>
       </KeyboardAvoidingView>
     );
   }
@@ -51,21 +71,9 @@ class RoomDetails extends Component {
     let { messages, messagesXHR } = this.props.message;
     
     return (
-      <View>
-        <RoomListItem
-          auth={this.props.auth}
-          room={room}
-          upVoteRoom={this.props.upVoteRoom}
-          downVoteRoom={this.props.downVoteRoom}
-          navigate={this.props.navigation.navigate}
-        />
-        <ScrollView refreshControl={
-          <RefreshControl
-            refreshing={messagesXHR}
-            onRefresh={() => this.listMessages()}
-          />}>
-          {this.renderMessages(messages)}
-        </ScrollView>
+      <View style={styles.container}>
+        {this.renderRoomDetails(room)}
+        {this.renderMessages(messages, messagesXHR)}
         {this.renderSendMessage()}
       </View>
     );
