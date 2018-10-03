@@ -54,6 +54,7 @@ export function resetNewRoomFields() {
   };
 }
 
+// List Public Rooms
 export function listRoomsRequest(lat, lng, radius, units) {
   return {
     type: types.LIST_ROOMS_REQUEST,
@@ -84,6 +85,7 @@ export function listRoomsFailure(error) {
   };
 }
 
+// Create Public Room
 export function createRoomRequest(newRoom) {
   return {
     type: types.CREATE_ROOM_REQUEST,
@@ -100,6 +102,58 @@ export function createRoomSuccess(room) {
   };
 }
 
+// List Private Rooms
+export function listPrivateRoomsRequest() {
+  return {
+    type: types.LIST_PRIVATE_ROOMS_REQUEST,
+    payload: {}
+  };
+}
+
+export function listPrivateRoomsSuccess(rooms) {
+  return {
+    type: types.LIST_PRIVATE_ROOMS_SUCCESS,
+    payload: {
+      rooms
+    }
+  };
+}
+
+export function listPrivateRoomsFailure(error) {
+  return {
+    type: types.LIST_PRIVATE_ROOMS_FAILURE,
+    payload: {
+      error
+    }
+  };
+}
+
+// Create Private Room
+export function createPrivateRoomRequest(newRoom) {
+  return {
+    type: types.CREATE_PRIVATE_ROOM_REQUEST,
+    payload: newRoom,
+  };
+}
+
+export function createPrivateRoomSuccess(room) {
+  return {
+    type: types.CREATE_PRIVATE_ROOM_SUCCESS,
+    payload: {
+      room
+    }
+  };
+}
+
+export function createPrivateRoomFailure(error) {
+  return {
+    type: types.CREATE_PRIVATE_ROOM_FAILURE,
+    payload: {
+      error
+    }
+  };
+}
+
 export function createRoomFailure(error) {
   return {
     type: types.CREATE_ROOM_FAILURE,
@@ -109,6 +163,7 @@ export function createRoomFailure(error) {
   };
 }
 
+// Select Room
 export function selectRoom(room) {
   return {
     type: types.SELECT_ROOM,
@@ -127,6 +182,7 @@ export function clearSelectedRoom() {
   };
 }
 
+// Voting
 export function upVoteRoom(roomId, userId) {
   return {
     type: types.UP_VOTE_ROOM_REQUEST,

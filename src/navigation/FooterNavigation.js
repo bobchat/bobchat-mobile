@@ -3,8 +3,7 @@ import { createBottomTabNavigator } from 'react-navigation';
 import { Text } from 'react-native'
 import RoomStack from './RoomStack';
 import MapStack from './MapStack';
-// import MessageStack from './MessageStack';
-// import SettingsStack from './SettingsStack';
+import PrivateRoomStack from './PrivateRoomStack';
 import TabBarComponent from '../components/TabBarComponent';
 import { Icon } from "react-native-elements";
 
@@ -26,7 +25,7 @@ const FooterNavigation = createBottomTabNavigator(
       },
     },
     MessageTab: {
-      screen: RoomStack,
+      screen: PrivateRoomStack,
       navigationOptions: {
         tabBarLabel: ({ focused }) => <Text>DM</Text>,
         tabBarIcon: ({ focused }) => <Icon name='mail' type='octicon' />

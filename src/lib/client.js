@@ -116,6 +116,15 @@ class Client {
       .then(res => res.body)
       .catch(this._handleError);
   }
+  createPrivateRoom(senderId, senderAlias, parentRoomId) {
+    return this.post('/room/new/private', {
+      senderId,
+      senderAlias,
+      parentRoomId,
+    })
+    .then(res => res.body)
+    .catch(this._handleError);
+  }
   listRooms(lat, lng) {
     console.log(lat, lng);
     return this.get("/room/list", {
@@ -126,6 +135,11 @@ class Client {
         return res.body;
       })
       .catch(this._handleError);
+  }
+  listPrivateRooms(){
+    return this.get('/room/list/private')
+    .then(res => res.body)
+    .catch(this._handleError);
   }
   // Messages
   listMessages(roomId) {
