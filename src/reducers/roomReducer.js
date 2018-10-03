@@ -23,11 +23,20 @@ function newRoomState(){
 function roomState() {
   return {
     newRoom: newRoomState(),
-    rooms: [],
+    roomsMap: {},
     roomsXHR: false,
     roomsError: null,
-    room: null
+    selectedRoomId: null,
   };
+}
+
+function createHashMap(array, key){
+  return array.reduce((cur, next) => {
+    return {
+      ...cur,
+      [next[key]]: next,
+    };
+  }, {});
 }
 
 export default function roomReducer(state = roomState(), action) {
@@ -41,7 +50,7 @@ export default function roomReducer(state = roomState(), action) {
       return {...state, newRoom: newRoomState()};
 
     case types.UP_VOTE_ROOM_REQUEST:
-      rooms = state.rooms.map(room => {
+      rooms = Object.values(state.roomsMap).map(room => {
         if(room._id == payload.roomId) {
 
           let isUpVoted = room.upVoteUserIds.includes(payload.userId);
@@ -58,11 +67,11 @@ export default function roomReducer(state = roomState(), action) {
       });
       return {
         ...state,
-        rooms,
+        roomsMap: createHashMap(rooms, '_id'),
       };
 
     case types.DOWN_VOTE_ROOM_REQUEST:
-      rooms = state.rooms.map(room => {
+      rooms = Object.values(state.roomsMap).map(room => {
         if (room._id == payload.roomId) {
 
           let isUpVoted = room.upVoteUserIds.includes(payload.userId);
@@ -79,12 +88,12 @@ export default function roomReducer(state = roomState(), action) {
       });
       return {
         ...state,
-        rooms,
+        roomsMap: createHashMap(rooms, '_id'),
       };
       
 
     case types.SELECT_ROOM:
-      return { ...state, room: payload.room };
+      return { ...state, selectedRoomId: payload.roomId };
 
     case types.CLEAR_SELECTED_ROOM:
       return {...state, room: null };
@@ -93,7 +102,12 @@ export default function roomReducer(state = roomState(), action) {
       return { ...state, roomsError: null, roomsXHR: true };
 
     case types.LIST_ROOMS_SUCCESS:
-      return { ...state, rooms: payload.rooms, roomsError: null, roomsXHR: false };
+      return { ...state, roomsMap: payload.rooms.reduce((cur, next) => {
+        return {
+          ...cur,
+          [next._id]: next,
+        };
+      }, {}), roomsError: null, roomsXHR: false };
 
     case types.LIST_ROOMS_FAILURE:
       return { ...state, roomsError: payload.error, roomsXHR: false };

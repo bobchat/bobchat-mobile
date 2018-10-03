@@ -8,7 +8,7 @@ import { Icon } from "react-native-elements";
 export default class RoomListItem extends Component {
   selectRoom(room){
     if(this.props.selectRoom) {
-      this.props.selectRoom(room);
+      this.props.selectRoom(room._id);
     }
   }
   renderMeta(room){
@@ -46,7 +46,9 @@ export default class RoomListItem extends Component {
   }
   render() {
     let { room } = this.props;
-    return <TouchableOpacity onPress={() => this.selectRoom(room)}>
+    console.log(this.props);
+    return (
+      <TouchableOpacity onPress={() => this.selectRoom(room)}>
         <Card containerStyle={styles.containerStyle} wrapperStyle={styles.wrapperStyle}>
           <View style={styles.leftContainer}>
             <View style={styles.titleContainer}>
@@ -56,6 +58,7 @@ export default class RoomListItem extends Component {
           </View>
           {this.renderVotes()}
         </Card>
-      </TouchableOpacity>;
+      </TouchableOpacity>
+    );
   }
 }

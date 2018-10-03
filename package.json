@@ -13,6 +13,8 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
+    "ios:8": "react-native-scripts ios --simulator=\"iPhone 8\"",
+    "ios:x": "react-native-scripts ios --simulator=\"iPhone XS Max\"",
     "test": "jest"
   },
   "jest": {

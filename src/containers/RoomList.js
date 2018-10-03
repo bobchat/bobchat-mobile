@@ -114,7 +114,7 @@ class Rooms extends Component {
     ));
   }
   render() {
-    const {rooms, roomsXHR, roomsError} = this.props.room;
+    const {roomsMap, roomsXHR, roomsError} = this.props.room;
     return (
       <View>
         <ScrollView
@@ -128,7 +128,7 @@ class Rooms extends Component {
             />
           }
         >
-        {this.renderRoomList(rooms)}
+        {this.renderRoomList(Object.values(roomsMap))}
         </ScrollView>
       </View>
     );
@@ -138,7 +138,7 @@ class Rooms extends Component {
 const mapDispatchToProps = dispatch => ({
   getToken: deviceUniqueId => dispatch(actions.getTokenRequest(deviceUniqueId)),
   listRooms: (lat, lng, radius, units) => dispatch(actions.listRoomsRequest(lat, lng, radius, units)),
-  selectRoom: room => dispatch(actions.selectRoom(room)),
+  selectRoom: roomId => dispatch(actions.selectRoom(roomId)),
   upVoteRoom: (roomId, userId) => dispatch(actions.upVoteRoom(roomId, userId)),
   downVoteRoom: (roomId, userId) => dispatch(actions.downVoteRoom(roomId, userId)),
 });

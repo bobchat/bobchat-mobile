@@ -13,13 +13,15 @@ class RoomDetails extends Component {
     setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), 500);
   }
   listMessages() {
-    this.props.listMessages(this.props.room.room._id);
+    const { selectedRoomId } = this.props.room;
+    this.props.listMessages(selectedRoomId);
   }
   sendMessage(newMessage, roomId, userId) {
     this.props.sendMessage(newMessage, roomId, userId);
     setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), 200);
   }
   renderRoomDetails(room) {
+    console.log(room);
     return (
       <RoomListItem
         auth={this.props.auth}
@@ -51,7 +53,7 @@ class RoomDetails extends Component {
   renderSendMessage() {
     let { user } = this.props.auth;
     let { newMessage } = this.props.message;
-    let { room } = this.props.room;
+    let { selectedRoomId } = this.props.room;
     return (
       <View style={styles.newMessageContainer}>
         <TextInput
@@ -62,7 +64,7 @@ class RoomDetails extends Component {
           onChangeText={text => this.props.updateNewMessage(text)}
         />
         <TouchableOpacity
-          onPress={() => this.sendMessage(newMessage, room._id, user._id)}
+          onPress={() => this.sendMessage(newMessage, selectedRoomId, user._id)}
         >
           <View style={styles.sendButton}>
             <Text style={styles.sendButtonText}>Send</Text>
@@ -72,12 +74,12 @@ class RoomDetails extends Component {
     );
   }
   render() {
-    let { room } = this.props.room;
+    let { roomsMap, selectedRoomId } = this.props.room;
     let { messages, messagesXHR } = this.props.message;
 
     return (
       <KeyboardAvoidingView style={styles.container}>
-        {this.renderRoomDetails(room)}
+        {this.renderRoomDetails(roomsMap[selectedRoomId])}
         {this.renderMessages(messages, messagesXHR)}
         {this.renderSendMessage()}
       </KeyboardAvoidingView>

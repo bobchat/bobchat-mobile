@@ -164,11 +164,11 @@ export function createRoomFailure(error) {
 }
 
 // Select Room
-export function selectRoom(room) {
+export function selectRoom(roomId) {
   return {
     type: types.SELECT_ROOM,
     payload: {
-      room,
+      roomId,
     },
   };
 }
