@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import authReducer from './src/reducers/authReducer';
 import roomReducer from './src/reducers/roomReducer';
+import privateRoomReducer from "./src/reducers/privateRoomReducer";
 import messageReducer from './src/reducers/messageReducer';
 import { Stack  } from './src/navigation/Navigation';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
@@ -16,6 +17,7 @@ let store = createStore(
     {
       auth: authReducer,
       room: roomReducer,
+      privateRoom: privateRoomReducer,
       message: messageReducer,
     }
   ),
@@ -32,10 +34,12 @@ export default class App extends Component {
   }
   render() {
 
-    return <Provider store={store}>
+    return (
+      <Provider store={store}>
         <Stack ref={nav => {
-            this.navigator = nav;
-          }} />
-      </Provider>;
+          this.navigator = nav;
+        }} />
+      </Provider>
+    );
   }
 }

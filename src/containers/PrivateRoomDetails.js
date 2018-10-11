@@ -1,34 +1,32 @@
 import React, { Component } from "react";
-import { TouchableOpacity, View, ScrollView, RefreshControl, KeyboardAvoidingView, Text, TextInput} from "react-native";
-import Message from "./../components/Message";
-import { Screens } from "./../navigation/Navigation";
+import { TouchableOpacity, View, ScrollView, RefreshControl, KeyboardAvoidingView, Text, TextInput } from "react-native";
+import Message from "../components/Message";
+import { Screens } from "../navigation/Navigation";
 import { connect } from "react-redux";
-import * as actions from "./../actions/actions";
-import RoomListItem from "./../components/RoomListItem";
-import styles from './styles/RoomDetailsStyle';
-import * as PrivateRoomActions from './../actions/PrivateRoomActions';
+import * as actions from "../actions/actions";
+import PrivateRoomListItem from "../components/PrivateRoomListItem";
+import styles from './styles/PrivateRoomDetailsStyle';
+import * as PrivateRoomActions from '../actions/PrivateRoomActions';
 
-class RoomDetails extends Component {
+class PrivateRoomDetails extends Component {
   componentDidMount() {
     this.listMessages();
     setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), 500);
   }
   listMessages() {
-    const { selectedRoomId } = this.props.room;
-    this.props.listMessages(selectedRoomId);
+    const { selectedPrivateRoomId } = this.props.privateRoom;
+    this.props.listMessages(selectedPrivateRoomId);
   }
   sendMessage(newMessage, roomId, userId) {
     this.props.sendMessage(newMessage, roomId, userId);
     setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), 200);
   }
-  renderRoomDetails(room) {
+  renderPrivateRoomDetails(room) {
     return (
-      <RoomListItem
+      <PrivateRoomListItem
         auth={this.props.auth}
         room={room}
         isDetails={true}
-        upVoteRoom={this.props.upVoteRoom}
-        downVoteRoom={this.props.downVoteRoom}
         navigate={this.props.navigation.navigate}
       />
     );
@@ -54,7 +52,7 @@ class RoomDetails extends Component {
   renderSendMessage() {
     let { user } = this.props.auth;
     let { newMessage } = this.props.message;
-    let { selectedRoomId } = this.props.room;
+    let { selectedPrivateRoomId } = this.props.privateRoom;
     return (
       <View style={styles.newMessageContainer}>
         <TextInput
@@ -65,7 +63,7 @@ class RoomDetails extends Component {
           onChangeText={text => this.props.updateNewMessage(text)}
         />
         <TouchableOpacity
-          onPress={() => this.sendMessage(newMessage, selectedRoomId, user._id)}
+          onPress={() => this.sendMessage(newMessage, selectedPrivateRoomId, user._id)}
         >
           <View style={styles.sendButton}>
             <Text style={styles.sendButtonText}>Send</Text>
@@ -75,12 +73,12 @@ class RoomDetails extends Component {
     );
   }
   render() {
-    let { roomsMap, selectedRoomId } = this.props.room;
+    let { privateRoomsMap, selectedPrivateRoomId } = this.props.privateRoom;
     let { messages, messagesXHR } = this.props.message;
 
     return (
       <KeyboardAvoidingView style={styles.container}>
-        {this.renderRoomDetails(roomsMap[selectedRoomId])}
+        {this.renderPrivateRoomDetails(privateRoomsMap[selectedPrivateRoomId])}
         {this.renderMessages(messages, messagesXHR)}
         {this.renderSendMessage()}
       </KeyboardAvoidingView>
@@ -92,14 +90,13 @@ const mapDispatchToProps = dispatch => ({
   listMessages: roomId => dispatch(actions.listMessagesRequest(roomId)),
   updateNewMessage: newMessage => dispatch(actions.updateNewMessage(newMessage)),
   sendMessage: (message, roomId, ownerId) => dispatch(actions.sendMessage(message, roomId, ownerId)),
-  upVoteRoom: (roomId, userId) => dispatch(actions.upVoteRoom(roomId, userId)),
-  downVoteRoom: (roomId, userId) => dispatch(actions.downVoteRoom(roomId, userId)),
 });
 
 const mapStateToProps = state => {
   return {
     auth: state.auth,
     room: state.room,
+    privateRoom: state.privateRoom,
     message: state.message,
   };
 };
@@ -107,4 +104,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RoomDetails);
+)(PrivateRoomDetails);

@@ -1,17 +1,17 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from "react-native";
 import { createStackNavigator } from 'react-navigation';
-import PrivateRoomList from './../containers/PrivateRoomList'
-import RoomDetails from './../containers/RoomDetails';
-import BackButton from './../components/BackButton'
+import PrivateRoomList from './../containers/PrivateRoomList';
+import PrivateRoomDetails from './../containers/PrivateRoomDetails';
+import BackButton from './../components/BackButton';
 
-const RoomStack = createStackNavigator(
+const PrivateRoomStack = createStackNavigator(
   {
     PrivateRoomList: {
-      screen: PrivateRoomList,
+      screen: PrivateRoomList
     },
-    RoomDetails: {
-      screen: RoomDetails,
+    PrivateRoomDetails: {
+      screen: PrivateRoomDetails,
       navigationOptions: ({ navigation }) => ({
         headerLeft: (
           <TouchableOpacity
@@ -23,9 +23,9 @@ const RoomStack = createStackNavigator(
           </TouchableOpacity>
         ),
       }),
-    }
+    },
   },
   {}
 );
 
-export default RoomStack;
+export default PrivateRoomStack;

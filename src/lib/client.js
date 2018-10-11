@@ -116,12 +116,8 @@ class Client {
       .then(res => res.body)
       .catch(this._handleError);
   }
-  createPrivateRoom(senderId, senderAlias, parentRoomId) {
-    return this.post('/room/new/private', {
-      senderId,
-      senderAlias,
-      parentRoomId,
-    })
+  createPrivateRoom(newRoom = {}) {
+    return this.post('/room/new/private', newRoom)
     .then(res => res.body)
     .catch(this._handleError);
   }

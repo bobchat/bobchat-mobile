@@ -28,6 +28,7 @@ export default function reducer(state = messageState(), action) {
       return { ...state, messagesError: null, messagesXHR: true };
 
     case types.LIST_MESSAGES_SUCCESS:
+      console.log(payload.messages);
       return {
         ...state,
         messages: payload.messages,

@@ -1,11 +1,7 @@
-import * as types from "./../actions/types";
+import * as types from './../actions/types';
 import { HOUR } from './../lib/time'
-
-
-function removeElement(array, el){
-  array = array.splice(0);
-  return array.filter(arEl => arEl != el);
-}
+import removeElement from './../util/removeElement'
+import createHashMap from './../util/createHashMap';
 
 function newRoomState(){
   return {
@@ -28,15 +24,6 @@ function roomState() {
     roomsError: null,
     selectedRoomId: null,
   };
-}
-
-function createHashMap(array, key){
-  return array.reduce((cur, next) => {
-    return {
-      ...cur,
-      [next[key]]: next,
-    };
-  }, {});
 }
 
 export default function roomReducer(state = roomState(), action) {
@@ -102,15 +89,20 @@ export default function roomReducer(state = roomState(), action) {
       return { ...state, roomsError: null, roomsXHR: true };
 
     case types.LIST_ROOMS_SUCCESS:
-      return { ...state, roomsMap: payload.rooms.reduce((cur, next) => {
-        return {
-          ...cur,
-          [next._id]: next,
-        };
-      }, {}), roomsError: null, roomsXHR: false };
+      return { ...state, roomsMap: createHashMap(payload.rooms, '_id'), roomsError: null, roomsXHR: false };
 
     case types.LIST_ROOMS_FAILURE:
       return { ...state, roomsError: payload.error, roomsXHR: false };
+
+
+    case types.CREATE_ROOM_SUCCESS:
+      return {
+        ...state,
+        roomsMap: createHashMap([
+          ...Object.values(state.roomsMap),
+          payload.room,
+        ], '_id'),
+      }
 
     default:
       return state;

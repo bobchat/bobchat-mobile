@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 import { Icon } from "react-native-elements";
-import RoomListItem from '../components/RoomListItem'
+import PrivateRoomListItem from '../components/PrivateRoomListItem'
 import { Screens } from "../navigation/Navigation";
 import { connect } from "react-redux";
 import * as actions from '../actions/actions'
+import * as PrivateRoomActions from '../actions/PrivateRoomActions'
 import styles from '../styles/RoomStyle';
 import { Constants, Location, Permissions } from "expo";
 
@@ -65,7 +66,7 @@ class RoomsHeader extends Component {
   }
 }
 
-class PrivateRoomsList extends Component {
+class Rooms extends Component {
   static navigationOptions = navigation => ({
     headerTitle: () => <RoomsHeader navigation={navigation.navigation} />,
     headerStyle: styles.headerStyle,
@@ -78,7 +79,9 @@ class PrivateRoomsList extends Component {
     if (!this.props.auth.token) {
       this.props.getToken("0123456789");
     }
-
+    this.listPrivateRooms();
+  }
+  async listPrivateRooms() {
     this.props.listPrivateRooms();
   }
   renderRoomList(rooms) {
@@ -91,19 +94,17 @@ class PrivateRoomsList extends Component {
     }
 
     return rooms.map((room, index) => (
-      <RoomListItem
+      <PrivateRoomListItem
         key={index}
         auth={this.props.auth}
         room={room}
-        selectRoom={this.props.selectRoom}
-        upVoteRoom={this.props.upVoteRoom}
-        downVoteRoom={this.props.downVoteRoom}
+        selectPrivateRoom={this.props.selectPrivateRoom}
         navigate={this.props.navigation.navigate}
       />
     ));
   }
   render() {
-    const { rooms, roomsXHR, roomsError } = this.props.room;
+    const { privateRoomsMap, privateRoomsXHR, privateRoomsError } = this.props.privateRoom;
     return (
       <View>
         <ScrollView
@@ -112,12 +113,12 @@ class PrivateRoomsList extends Component {
           }}
           refreshControl={
             <RefreshControl
-              refreshing={roomsXHR}
-              onRefresh={() => this.props.listPrivateRooms()}
+              refreshing={privateRoomsXHR}
+              onRefresh={() => this.listPrivateRooms()}
             />
           }
         >
-          {this.renderRoomList(rooms)}
+        {this.renderRoomList(Object.values(privateRoomsMap))}
         </ScrollView>
       </View>
     );
@@ -125,22 +126,20 @@ class PrivateRoomsList extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
+  listPrivateRooms: () => dispatch(PrivateRoomActions.listPrivateRoomsRequest()),
+  selectPrivateRoom: roomId => dispatch(PrivateRoomActions.selectPrivateRoom(roomId)),
   getToken: deviceUniqueId => dispatch(actions.getTokenRequest(deviceUniqueId)),
-  listPrivateRooms: () => dispatch(actions.listPrivateRoomsRequest()),
-  selectRoom: room => dispatch(actions.selectRoom(room)),
-  upVoteRoom: (roomId, userId) => dispatch(actions.upVoteRoom(roomId, userId)),
-  downVoteRoom: (roomId, userId) => dispatch(actions.downVoteRoom(roomId, userId)),
 });
 
 const mapStateToProps = state => {
   return {
-    room: state.room,
     auth: state.auth,
+    privateRoom: state.privateRoom,
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(PrivateRoomsList);
+)(Rooms);
 

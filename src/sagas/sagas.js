@@ -4,6 +4,7 @@ import Client from './../lib/client';
 import connect from './../lib/connect';
 import * as types from './../actions/types';
 import * as actions from './../actions/actions';
+import * as PrivateRoomActions from "./../actions/PrivateRoomActions";
 import * as NavigationService from './../navigation/NavigationService';
 import {
   REST_API_URL
@@ -16,7 +17,11 @@ export default function* rootSaga() {
     yield all([
       getTokenWatch(),
       createRoomWatch(),
+      listPrivateRoomsWatch(),
       createRoomSuccessWatch(),
+      createPrivateRoomWatch(),
+      createPrivateRoomSuccessWatch(),
+      selectPrivateRoomWatch(),
       selectRoomWatch(),
       listRoomsWatch(),
       listMessagesWatch(),
@@ -49,6 +54,60 @@ function* getTokenSaga(action) {
 }
 
 
+// List Private Rooms
+function* listPrivateRoomsWatch() {
+  yield takeLatest(types.LIST_PRIVATE_ROOMS_REQUEST, listPrivateRoomsSaga);
+}
+
+function* listPrivateRoomsSaga(action) {
+  try {
+    const { rooms } = yield call(() => API.listPrivateRooms());
+    yield put(PrivateRoomActions.listPrivateRoomsSuccess(rooms));
+  } catch (error) {
+    yield put(PrivateRoomActions.listPrivateRoomsFailure(error));
+  }
+}
+
+// Create Private Room
+function* createPrivateRoomWatch() {
+  yield takeLatest(types.CREATE_PRIVATE_ROOM_REQUEST, createPrivateRoomSaga);
+}
+
+function* createPrivateRoomSaga(action) {
+  let newRoom = action.payload;
+  try {
+    const { room } = yield call(() => API.createPrivateRoom(newRoom));
+    yield put(PrivateRoomActions.createPrivateRoomSuccess(room));
+  } catch (error) {
+    yield put(PrivateRoomActions.createPrivateRoomFailure(error));
+  }
+}
+
+function* selectPrivateRoomWatch() {
+  yield takeLatest(types.SELECT_PRIVATE_ROOM, selectPrivateRoomSaga);
+}
+
+function* selectPrivateRoomSaga() {
+  yield call(() => NavigationService.navigate('PrivateRoomDetails'))
+}
+
+function* createPrivateRoomSuccessWatch() {
+  yield takeLatest(types.CREATE_PRIVATE_ROOM_SUCCESS, createPrivateRoomSuccessSaga);
+}
+
+function* createPrivateRoomSuccessSaga(action) {
+  let { room } = action.payload;
+  yield put(PrivateRoomActions.selectPrivateRoom(room._id));
+}
+
+function* selectRoomWatch() {
+  yield takeLatest(types.SELECT_ROOM, selectRoomSaga);
+}
+
+function* selectRoomSaga() {
+  yield call(() => NavigationService.navigate('RoomDetails'))
+}
+
 // Create Room
 function* createRoomWatch() {
   yield takeLatest(types.CREATE_ROOM_REQUEST, createRoomSaga);
@@ -71,7 +130,9 @@ function* createRoomSuccessWatch() {
 
 function* createRoomSuccessSaga(action) {
   let { room } = action.payload;
-  yield put(actions.selectRoom(room));
+  console.log(room);
+  console.log('this one');
+  yield put(actions.selectRoom(room._id));
 }
 
 function* selectRoomWatch(){
@@ -152,6 +213,7 @@ function* socketIO() {
     yield all([
       yield fork(read, socket),
       yield fork(write, socket, types.SELECT_ROOM, 'room'),
+      yield fork(write, socket, types.SELECT_PRIVATE_ROOM, 'room'),
       yield fork(write, socket, types.SEND_MESSAGE, 'message'),
     ])
   } catch (e) {

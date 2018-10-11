@@ -8,11 +8,10 @@ import styles from '../styles/RoomStyle';
 import { Constants, Location, Permissions } from "expo";
 import MapView, { Marker } from "react-native-maps";
 
-console.log(Marker);
-
 class RoomMap extends Component {
   render(){
-    let { rooms } = this.props.room;
+    let { roomsMap } = this.props.room;
+    let rooms = Object.values(roomsMap);
     return (
       <MapView
         style={{ flex: 1 }}
@@ -27,7 +26,7 @@ class RoomMap extends Component {
           return (
             <Marker 
               key={i} 
-              onPress={() => this.props.selectRoom(room)} 
+              onPress={() => this.props.selectRoom(room._id)} 
               coordinate={{
                 latitude: room.location.coords.latitude,
                 longitude: room.location.coords.longitude,

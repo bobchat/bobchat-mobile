@@ -10,6 +10,8 @@ function authState() {
 
 export default function reducer(state = authState(), action) {
   let { type, payload } = action;
+  
+  console.log(type);
 
   switch (type) {
     case types.GET_TOKEN_SUCCESS:

@@ -6,6 +6,8 @@ class TabBarComponent extends React.PureComponent {
   hideTabBarScreenList = [
     'CreateRoom',
     'RoomDetails',
+    'CreatePrivateRoom',
+    'PrivateRoomDetails',
   ];
 
   constructor(props) {
@@ -63,10 +65,7 @@ class TabBarComponent extends React.PureComponent {
   };
 
   render() {
-    let currentScreen = this.getScreen();
-    return this.state.isVisible && !this.hideTabBarScreenList.some(screen => {
-      return screen == currentScreen.routes[currentScreen.routes.length-1].routeName;
-    }) ? (
+    return (
       <View style={{ alignItems: 'center' }}>
         <BottomTabBar
           {...this.props}
@@ -81,7 +80,7 @@ class TabBarComponent extends React.PureComponent {
           }}
         />
       </View>
-    ) : null;
+    );
   }
 }
 

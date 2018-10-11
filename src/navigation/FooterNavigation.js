@@ -47,7 +47,6 @@ const FooterNavigation = createBottomTabNavigator(
     removeClippedSubviews: true,
     tabBarComponent: TabBarComponent,
     tabBarOptions: {
-      
       inactiveTintColor: 'white',
       activeTintColor: 'green',
       showIcon: true,
