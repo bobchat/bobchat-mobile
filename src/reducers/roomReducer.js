@@ -20,6 +20,7 @@ function roomState() {
   return {
     newRoom: newRoomState(),
     roomsMap: {},
+    parentRoomIdToChildIdMap: {},
     roomsXHR: false,
     roomsError: null,
     selectedRoomId: null,
@@ -93,7 +94,6 @@ export default function roomReducer(state = roomState(), action) {
 
     case types.LIST_ROOMS_FAILURE:
       return { ...state, roomsError: payload.error, roomsXHR: false };
-
 
     case types.CREATE_ROOM_SUCCESS:
       return {

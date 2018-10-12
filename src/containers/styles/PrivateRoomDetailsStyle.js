@@ -5,8 +5,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
   },
-  messagesContainer: {
-  },
+  messagesContainer: {},
   newMessageContainer: {
     backgroundColor: Color.white,
     display: 'flex',
@@ -17,6 +16,10 @@ export default StyleSheet.create({
     paddingRight: 10,
     borderColor: Color.grey,
     borderTopWidth: 1,
+    // marginTop: 10
+  },
+  spacer: {
+    height: 10,
   },
   newMessageInput: {
     backgroundColor: Color.white,

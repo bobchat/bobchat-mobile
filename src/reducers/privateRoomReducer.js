@@ -13,6 +13,7 @@ function privateRoomState() {
   return {
     newPrivateRoom: newPrivateRoomState(),
     privateRoomsMap: {},
+    parentRoomIdToChildIdMap: {},
     privateRoomsXHR: false,
     privateRoomsError: null,
     selectedPrivateRoomId: null,
@@ -37,7 +38,7 @@ export default function roomReducer(state = privateRoomState(), action) {
       return { ...state, privateRoomsError: null, privateRoomsXHR: true };
 
     case types.LIST_PRIVATE_ROOMS_SUCCESS:
-      return { ...state, privateRoomsMap: createHashMap(payload.rooms, "_id"), privateRoomsError: null, privateRoomsXHR: false };
+      return { ...state, privateRoomsMap: createHashMap(payload.rooms, "_id"), parentRoomIdToChildIdMap: createHashMap(payload.rooms, 'parentRoomId', '_id'), privateRoomsError: null, privateRoomsXHR: false };
 
     case types.LIST_PRIVATE_ROOMS_FAILURE:
       return { ...state, privateRoomsError: payload.error, privateRoomsXHR: false };
@@ -49,12 +50,14 @@ export default function roomReducer(state = privateRoomState(), action) {
       return { ...state, newPrivateRoom: newPrivateRoomState() };
 
     case types.CREATE_PRIVATE_ROOM_SUCCESS:
+      let rooms = [
+        ...Object.values(state.privateRoomsMap),
+        payload.room,
+      ];
       return {
         ...state,
-        privateRoomsMap: createHashMap([
-          ...Object.values(state.privateRoomsMap),
-          payload.room,
-        ], '_id'),
+        privateRoomsMap: createHashMap(rooms, '_id'),
+        parentRoomIdToChildIdMap: createHashMap(rooms, 'parentRoomId', '_id'),
       };
 
     default:

@@ -21,7 +21,7 @@ class RoomDetails extends Component {
     this.props.sendMessage(newMessage, roomId, userId);
     setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), 200);
   }
-  renderRoomDetails(room) {
+  renderRoomDetails(room, roomPrivateChildId = null) {
     return (
       <RoomListItem
         auth={this.props.auth}
@@ -30,6 +30,8 @@ class RoomDetails extends Component {
         upVoteRoom={this.props.upVoteRoom}
         downVoteRoom={this.props.downVoteRoom}
         navigate={this.props.navigation.navigate}
+        selectPrivateRoom={this.props.selectPrivateRoom}
+        roomPrivateChildId={roomPrivateChildId}
       />
     );
   }
@@ -76,11 +78,12 @@ class RoomDetails extends Component {
   }
   render() {
     let { roomsMap, selectedRoomId } = this.props.room;
+    let { parentRoomIdToChildIdMap } = this.props.privateRoom;
     let { messages, messagesXHR } = this.props.message;
 
     return (
       <KeyboardAvoidingView style={styles.container}>
-        {this.renderRoomDetails(roomsMap[selectedRoomId])}
+        {this.renderRoomDetails(roomsMap[selectedRoomId], parentRoomIdToChildIdMap[selectedRoomId])}
         {this.renderMessages(messages, messagesXHR)}
         {this.renderSendMessage()}
       </KeyboardAvoidingView>
@@ -94,12 +97,14 @@ const mapDispatchToProps = dispatch => ({
   sendMessage: (message, roomId, ownerId) => dispatch(actions.sendMessage(message, roomId, ownerId)),
   upVoteRoom: (roomId, userId) => dispatch(actions.upVoteRoom(roomId, userId)),
   downVoteRoom: (roomId, userId) => dispatch(actions.downVoteRoom(roomId, userId)),
+  selectPrivateRoom: privateRoomId => dispatch(PrivateRoomActions.selectPrivateRoom(privateRoomId))
 });
 
 const mapStateToProps = state => {
   return {
     auth: state.auth,
     room: state.room,
+    privateRoom: state.privateRoom, 
     message: state.message,
   };
 };

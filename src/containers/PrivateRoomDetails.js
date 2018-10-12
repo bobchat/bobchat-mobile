@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { TouchableOpacity, View, ScrollView, RefreshControl, KeyboardAvoidingView, Text, TextInput } from "react-native";
-import Message from "../components/Message";
+import { TouchableOpacity, View, ScrollView, RefreshControl, KeyboardAvoidingView, Text, TextInput, Keyboard } from "react-native";
+import { SentPrivateMessage, ReceivedPrivateMessage } from "../components/PrivateRoomMessages";
 import { Screens } from "../navigation/Navigation";
 import { connect } from "react-redux";
 import * as actions from "../actions/actions";
@@ -11,7 +11,7 @@ import * as PrivateRoomActions from '../actions/PrivateRoomActions';
 class PrivateRoomDetails extends Component {
   componentDidMount() {
     this.listMessages();
-    setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), 500);
+    this.scrollToEnd(500);
   }
   listMessages() {
     const { selectedPrivateRoomId } = this.props.privateRoom;
@@ -19,7 +19,10 @@ class PrivateRoomDetails extends Component {
   }
   sendMessage(newMessage, roomId, userId) {
     this.props.sendMessage(newMessage, roomId, userId);
-    setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), 200);
+    this.scrollToEnd();
+  }
+  scrollToEnd(msWait = 200) {
+    setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), msWait);
   }
   renderPrivateRoomDetails(room) {
     return (
@@ -32,9 +35,12 @@ class PrivateRoomDetails extends Component {
     );
   }
   renderMessages(messages, messagesXHR) {
+    let userId = this.props.auth.user._id;
     return (
       <ScrollView
         style={styles.messagesContainer}
+        keyboardShouldPersistTaps='handled'
+        keyboardDismissMode='on-drag'
         ref={ref => (this.scrollView = ref)}
         refreshControl={
           <RefreshControl
@@ -44,8 +50,10 @@ class PrivateRoomDetails extends Component {
         }
       >
         {messages.map((message, index) => (
-          <Message key={index} message={message} index={index} />
+          userId == message.owner ? <SentPrivateMessage key={index} message={message} index={index} />
+                                  : <ReceivedPrivateMessage key={index} message={message} index={index} />
         ))}
+        <View style={styles.spacer}></View>
       </ScrollView>
     );
   }
@@ -61,6 +69,7 @@ class PrivateRoomDetails extends Component {
           underlineColorAndroid="transparent"
           placeholder="Type something nice"
           onChangeText={text => this.props.updateNewMessage(text)}
+          onFocus={() => this.scrollToEnd()}
         />
         <TouchableOpacity
           onPress={() => this.sendMessage(newMessage, selectedPrivateRoomId, user._id)}
@@ -77,7 +86,7 @@ class PrivateRoomDetails extends Component {
     let { messages, messagesXHR } = this.props.message;
 
     return (
-      <KeyboardAvoidingView style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         {this.renderPrivateRoomDetails(privateRoomsMap[selectedPrivateRoomId])}
         {this.renderMessages(messages, messagesXHR)}
         {this.renderSendMessage()}

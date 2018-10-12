@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
+import { Platform, View, Text, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 import { Icon } from "react-native-elements";
 import RoomListItem from '../components/RoomListItem'
 import { Screens } from "../navigation/Navigation";
 import { connect } from "react-redux";
 import * as actions from '../actions/actions'
+import * as PrivateRoomActions from "../actions/PrivateRoomActions";
 import styles from '../styles/RoomStyle';
 import { Constants, Location, Permissions } from "expo";
 
@@ -75,8 +76,14 @@ class Rooms extends Component {
     }
   });
   componentWillMount() {
+    const id = Platform.select({
+      ios: () => 'ios123',
+      android: () => 'android123'
+    })();
+
+
     if(!this.props.auth.token) {
-      this.props.getToken("0123456789");
+      this.props.getToken(id);
     }
     
     this.listRooms();
@@ -91,6 +98,7 @@ class Rooms extends Component {
     const lat = location.coords.latitude;
     const lng = location.coords.longitude;
     this.props.listRooms(lat, lng);
+    this.props.listPrivateRooms();
   }
   renderRoomList(rooms){
     if(!rooms.length) {
@@ -138,6 +146,7 @@ class Rooms extends Component {
 const mapDispatchToProps = dispatch => ({
   getToken: deviceUniqueId => dispatch(actions.getTokenRequest(deviceUniqueId)),
   listRooms: (lat, lng, radius, units) => dispatch(actions.listRoomsRequest(lat, lng, radius, units)),
+  listPrivateRooms: () => dispatch(PrivateRoomActions.listPrivateRoomsRequest()),
   selectRoom: roomId => dispatch(actions.selectRoom(roomId)),
   upVoteRoom: (roomId, userId) => dispatch(actions.upVoteRoom(roomId, userId)),
   downVoteRoom: (roomId, userId) => dispatch(actions.downVoteRoom(roomId, userId)),
