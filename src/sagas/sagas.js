@@ -130,8 +130,6 @@ function* createRoomSuccessWatch() {
 
 function* createRoomSuccessSaga(action) {
   let { room } = action.payload;
-  console.log(room);
-  console.log('this one');
   yield put(actions.selectRoom(room._id));
 }
 

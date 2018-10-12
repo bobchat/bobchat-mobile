@@ -27,7 +27,7 @@ class CreatePrivateRoom extends Component {
   renderButton(){
     return (
       <Button 
-        onPress={() => console.log(this.props.privateRoom.newPrivateRoom) || this.props.createPrivateRoom(this.props.privateRoom.newPrivateRoom)}
+        onPress={() => this.props.createPrivateRoom(this.props.privateRoom.newPrivateRoom)}
         title="Create"
         color="#841584"
         accessibilityLabel="Create private chat" />

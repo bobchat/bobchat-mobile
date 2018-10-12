@@ -1,8 +1,10 @@
 import * as types from "./../actions/types";
+import createHashMap from './../util/createHashMap';
 
 function messageState() {
   return {
     messages: [],
+    messagesMap: {},
     messagesXHR: false,
     messagesError: null,
     newMessage: ""
@@ -11,27 +13,41 @@ function messageState() {
 
 export default function reducer(state = messageState(), action) {
   let { type, payload } = action;
+  let messagesMap = { ...state.messagesMap };
+  
   switch (type) {
     case types.UPDATE_NEW_MESSAGE:
       return { ...state, newMessage: payload.newMessage };
 
     case types.SEND_MESSAGE:
-      return { ...state, newMessage: "" };
+
+      return { 
+        ...state, 
+        newMessage: "",
+      };
 
     case types.RECEIVE_MESSAGE:
-      let messages = state.messages.splice(0);
-      messages.push(payload.message);
-      return { ...state, messages };
+      messagesMap[payload.message.room].push(payload.message);
+      return {
+         ...state, 
+         messagesMap,
+      };
 
     // List Messages
     case types.LIST_MESSAGES_REQUEST:
       return { ...state, messagesError: null, messagesXHR: true };
 
     case types.LIST_MESSAGES_SUCCESS:
-      console.log(payload.messages);
+      if(payload.messages && payload.messages.length) {
+        messagesMap = {
+          ...messagesMap,
+          [payload.messages[0].room]: payload.messages
+        }  
+      }
+      
       return {
         ...state,
-        messages: payload.messages,
+        messagesMap: messagesMap,
         messagesError: null,
         messagesXHR: false
       };

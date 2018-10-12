@@ -23,7 +23,7 @@ export default StyleSheet.create({
   },
   newMessageInput: {
     backgroundColor: Color.white,
-    borderRadius: 10,
+    borderRadius: 15,
     flex: 3,
     minHeight: 40,
     padding: 5,
@@ -41,11 +41,11 @@ export default StyleSheet.create({
   sendButton: {
     backgroundColor: Color.lightBlue,
     height: 40,
-    width: 50,
+    width: 60,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10
+    borderRadius: 15
   },
   sendButtonText: {
     color: Color.white

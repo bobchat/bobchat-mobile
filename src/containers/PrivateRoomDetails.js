@@ -84,7 +84,8 @@ class PrivateRoomDetails extends Component {
   }
   render() {
     let { privateRoomsMap, selectedPrivateRoomId } = this.props.privateRoom;
-    let { messages, messagesXHR } = this.props.message;
+    let { messagesMap, messagesXHR } = this.props.message;
+    let messages = messagesMap[selectedPrivateRoomId] || [];
 
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>

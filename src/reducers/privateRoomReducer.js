@@ -25,11 +25,6 @@ function privateRoomState() {
 export default function roomReducer(state = privateRoomState(), action) {
   let { type, payload } = action;
 
-  if (type == types.CREATE_PRIVATE_ROOM_SUCCESS) {
-    console.log("HERE");
-    console.log(payload);
-  }
-
   switch (type) {
     case types.SELECT_PRIVATE_ROOM:
       return { ...state, selectedPrivateRoomId: payload.roomId };
