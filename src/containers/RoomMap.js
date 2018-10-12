@@ -9,15 +9,46 @@ import { Constants, Location, Permissions } from "expo";
 import MapView, { Marker } from "react-native-maps";
 
 class RoomMap extends Component {
+  constructor(){
+    super();
+    this.state = {
+      lat: 37.78825,
+      lng: -122.4324,
+    };
+  }
+  componentDidMount(){
+    this.getLocation();
+  }
+  async getLocation(){
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      console.log('DENIED LOCATION');
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    const lat = location.coords.latitude;
+    const lng = location.coords.longitude;
+    this.setState({
+      lat,
+      lng,
+    })
+  }
   render(){
     let { roomsMap } = this.props.room;
     let rooms = Object.values(roomsMap);
+    console.log(this.state);
     return (
       <MapView
         style={{ flex: 1 }}
+        region={{
+          latitude: this.state.lat,
+          longitude: this.state.lng,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: this.state.lat,
+          longitude: this.state.lng,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
