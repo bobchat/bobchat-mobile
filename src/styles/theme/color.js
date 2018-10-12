@@ -5,4 +5,5 @@ export default {
   lightBlue: "#0b5699",
   gold: "#ecaa00",
   grey: "#d9d8d8",
+  lightGrey: '#EEEEEE'
 };

@@ -3,42 +3,51 @@ import Color from './../../styles/theme//color'
 
 export default StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   messagesContainer: {},
   newMessageContainer: {
     backgroundColor: Color.white,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 60,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    minHeight: 60,
     paddingLeft: 10,
     paddingRight: 10,
     borderColor: Color.grey,
-    borderTopWidth: 1,
+    borderTopWidth: 1
     // marginTop: 10
   },
   spacer: {
-    height: 10,
+    height: 10
   },
   newMessageInput: {
     backgroundColor: Color.white,
-    borderRadius: 5,
+    borderRadius: 10,
     flex: 3,
-    height: 40,
+    minHeight: 40,
+    padding: 5,
+    paddingLeft: 10,
+    paddingTop: 9,
+    marginTop: 10,
+    marginBottom: 10,
     marginRight: 10,
-    padding: 5
+    maxWidth: 340,
+    backgroundColor: "#f1f2f3",
+    fontSize: 16,
+    borderColor: Color.lightGrey,
+    borderTopWidth: 1
   },
   sendButton: {
     backgroundColor: Color.lightBlue,
     height: 40,
     width: 50,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10
   },
   sendButtonText: {
-    color: Color.white,
+    color: Color.white
   }
 });

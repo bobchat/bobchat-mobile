@@ -52,6 +52,11 @@ export default class PrivateRoomListItem extends Component {
   }
   render() {
     const { room } = this.props;
+
+    if(this.props.isDetails) {
+      return this.renderCard(room);
+    }
+    
     return (
       <TouchableOpacity onPress={() => this.selectPrivateRoom(room)}>
         {this.renderCard(room)}

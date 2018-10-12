@@ -64,6 +64,7 @@ class PrivateRoomDetails extends Component {
     return (
       <View style={styles.newMessageContainer}>
         <TextInput
+          multiline={true}
           style={styles.newMessageInput}
           value={newMessage}
           underlineColorAndroid="transparent"
