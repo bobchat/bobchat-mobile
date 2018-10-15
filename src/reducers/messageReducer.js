@@ -27,7 +27,12 @@ export default function reducer(state = messageState(), action) {
       };
 
     case types.RECEIVE_MESSAGE:
-      messagesMap[payload.message.room].push(payload.message);
+      if(messagesMap[payload.message.room]) {
+        messagesMap[payload.message.room].push(payload.message);
+      } else {
+        messagesMap[payload.message.room] = [payload.message];
+      }
+      
       return {
          ...state, 
          messagesMap,

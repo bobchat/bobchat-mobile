@@ -1,5 +1,21 @@
 {
   "expo": {
-    "sdkVersion": "27.0.0"
+    "name": "BobChat",
+    "description": "Connect with people around you!",
+    "version": "0.0.1",
+    "icon": "./assets/icon.png",
+    "primaryColor": "#0b5699",
+    "orientation": "portrait",
+    "sdkVersion": "27.0.0",
+    "ios": {
+      "bundleIdentifier": "com.bobchat.bobchat"
+    },
+    "android": {
+      "package": "com.bobchat.bobchat"
+    },
+    "splash": {
+      "image": "./assets/splash.png",
+      "backgroundColor": "#0b5699"
+    }
   }
 }

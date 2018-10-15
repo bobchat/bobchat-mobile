@@ -8,6 +8,7 @@ import * as actions from '../actions/actions'
 import * as PrivateRoomActions from "../actions/PrivateRoomActions";
 import styles from '../styles/RoomStyle';
 import { Constants, Location, Permissions } from "expo";
+import { getDeviceToken } from './../lib/auth';
 
 class RoomsHeader extends Component {
   render(){
@@ -75,15 +76,12 @@ class Rooms extends Component {
       fontWeight: "bold"
     }
   });
-  componentWillMount() {
-    const id = Platform.select({
-      ios: () => 'ios123',
-      android: () => 'android123'
-    })();
+  async componentWillMount() {
+    const token = await getDeviceToken();
 
 
     if(!this.props.auth.token) {
-      this.props.getToken(id);
+      this.props.getToken(token);
     }
     
     this.listRooms();

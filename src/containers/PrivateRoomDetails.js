@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TouchableOpacity, View, ScrollView, RefreshControl, KeyboardAvoidingView, Text, TextInput, Keyboard } from "react-native";
+import { Animated, TouchableOpacity, View, ScrollView, RefreshControl, KeyboardAvoidingView, Text, TextInput, Keyboard } from "react-native";
 import { SentPrivateMessage, ReceivedPrivateMessage } from "../components/PrivateRoomMessages";
 import { Screens } from "../navigation/Navigation";
 import { connect } from "react-redux";
@@ -9,6 +9,12 @@ import styles from './styles/PrivateRoomDetailsStyle';
 import * as PrivateRoomActions from '../actions/PrivateRoomActions';
 
 class PrivateRoomDetails extends Component {
+  constructor(){
+    super();
+    this.state = {
+      showDetails: true,
+    };
+  }
   componentDidMount() {
     this.listMessages();
     this.scrollToEnd(500);
@@ -22,16 +28,20 @@ class PrivateRoomDetails extends Component {
     this.scrollToEnd();
   }
   scrollToEnd(msWait = 200) {
-    setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), msWait);
+    // setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), msWait);
+  }
+  onScroll(e) {
+    console.log(e);
   }
   renderPrivateRoomDetails(room) {
+    if(!this.state.showDetails) return null;
     return (
-      <PrivateRoomListItem
-        auth={this.props.auth}
-        room={room}
-        isDetails={true}
-        navigate={this.props.navigation.navigate}
-      />
+        <PrivateRoomListItem
+          auth={this.props.auth}
+          room={room}
+          isDetails={true}
+          navigate={this.props.navigation.navigate}
+        />
     );
   }
   renderMessages(messages, messagesXHR) {
@@ -39,6 +49,7 @@ class PrivateRoomDetails extends Component {
     return (
       <ScrollView
         style={styles.messagesContainer}
+        onScroll={e => this.onScroll(e)}
         keyboardShouldPersistTaps='handled'
         keyboardDismissMode='on-drag'
         ref={ref => (this.scrollView = ref)}
