@@ -15,6 +15,7 @@ let API = new Client(REST_API_URL);
 export default function* rootSaga() {
   try {
     yield all([
+      initializeApplicationWatch(),
       getTokenWatch(),
       createRoomWatch(),
       listPrivateRoomsWatch(),
@@ -38,7 +39,20 @@ export default function* rootSaga() {
 API Requests
 ================================================================================*/
 
-// Login
+function* initializeApplicationWatch(){
+  yield takeLatest(types.INITIALIZE_APPLICATION, initializeApplication);
+}
+
+function* initializeApplication(action) {
+  let { deviceUniqueId, lat, lng } = action.payload;
+  yield put(actions.getTokenRequest(deviceUniqueId));
+  yield takeLatest(types.GET_TOKEN_SUCCESS, function* () {
+    yield put(actions.listRoomsRequest(lat, lng));
+    yield put(PrivateRoomActions.listPrivateRoomsRequest());
+  });
+}
+
+// Authentication
 function* getTokenWatch() {
   yield takeLatest(types.GET_TOKEN_REQUEST, getTokenSaga);
 }
@@ -52,7 +66,6 @@ function* getTokenSaga(action) {
     yield put(actions.getTokenFailure(error));
   }
 }
-
 
 // List Private Rooms
 function* listPrivateRoomsWatch() {

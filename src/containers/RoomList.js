@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
-import { Platform, View, Text, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 import { Icon } from "react-native-elements";
 import RoomListItem from '../components/RoomListItem'
-import { Screens } from "../navigation/Navigation";
 import { connect } from "react-redux";
 import * as actions from '../actions/actions'
 import * as PrivateRoomActions from "../actions/PrivateRoomActions";
 import styles from '../styles/RoomStyle';
-import { Constants, Location, Permissions } from "expo";
-import { getDeviceToken } from './../lib/auth';
+import { getdeviceUniqueId } from './../lib/auth';
+import { getLocation } from './../lib/location';
 
 class RoomsHeader extends Component {
   render(){
@@ -77,22 +76,19 @@ class Rooms extends Component {
     }
   });
   async componentWillMount() {
-    const token = await getDeviceToken();
-
+    const token = await getdeviceUniqueId();
+    const location = await getLocation();
+    const lat = location.coords.latitude;
+    const lng = location.coords.longitude;
 
     if(!this.props.auth.token) {
-      this.props.getToken(token);
+      this.props.initializeApplication(token, lat, lng);
+    } else {
+      this.listRooms();
     }
-    
-    this.listRooms();
   }
   async listRooms(){
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      console.log('DENIED LOCATION');
-    }
-
-    let location = await Location.getCurrentPositionAsync({});
+    const location = await getLocation();
     const lat = location.coords.latitude;
     const lng = location.coords.longitude;
     this.props.listRooms(lat, lng);
@@ -142,7 +138,7 @@ class Rooms extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  getToken: deviceUniqueId => dispatch(actions.getTokenRequest(deviceUniqueId)),
+  initializeApplication: (deviceUniqueId, lat, lng) => dispatch(actions.initializeApplication(deviceUniqueId, lat, lng)),
   listRooms: (lat, lng, radius, units) => dispatch(actions.listRoomsRequest(lat, lng, radius, units)),
   listPrivateRooms: () => dispatch(PrivateRoomActions.listPrivateRoomsRequest()),
   selectRoom: roomId => dispatch(actions.selectRoom(roomId)),

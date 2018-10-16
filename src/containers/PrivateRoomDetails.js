@@ -28,7 +28,7 @@ class PrivateRoomDetails extends Component {
     this.scrollToEnd();
   }
   scrollToEnd(msWait = 200) {
-    // setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), msWait);
+    setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), msWait);
   }
   onScroll(e) {
     console.log(e);
@@ -46,10 +46,11 @@ class PrivateRoomDetails extends Component {
   }
   renderMessages(messages, messagesXHR) {
     let userId = this.props.auth.user._id;
+
     return (
       <ScrollView
         style={styles.messagesContainer}
-        onScroll={e => this.onScroll(e)}
+        // onScroll={e => this.onScroll(e)}
         keyboardShouldPersistTaps='handled'
         keyboardDismissMode='on-drag'
         ref={ref => (this.scrollView = ref)}

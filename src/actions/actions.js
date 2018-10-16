@@ -1,5 +1,21 @@
 import * as types from "./types";
 
+
+/*================================================================================
+Initialize Application
+================================================================================*/
+
+export function initializeApplication(deviceUniqueId, lat, lng){
+  return {
+    type: types.INITIALIZE_APPLICATION,
+    payload: {
+      deviceUniqueId,
+      lat,
+      lng,
+    }
+  }
+}
+
 /*================================================================================
 Get Token
 ================================================================================*/
