@@ -19,13 +19,37 @@ class PrivateRoomDetails extends Component {
     this.listMessages();
     this.scrollToEnd(500);
   }
+  // componentDidUpdate(prevProps, prevState) {
+  //   let { selectedPrivateRoomId } = this.props.privateRoom;
+
+  //   let nowMessagesMap = this.props.message.messagesMap;
+  //   let now = nowMessagesMap[selectedPrivateRoomId] || [];
+  //   now = now.length;
+
+  //   let prevMessagesMap = prevProps.message.messagesMap;
+  //   let prev = prevMessagesMap[selectedPrivateRoomId] || [];
+  //   prev = prev.length;
+
+  //   console.log('prev: ', prev);
+  //   console.log('now: ', now);
+  //   if (prev !== now) {
+  //     console.log('HITTT');
+  //     this.scrollToEnd(500);
+  //   }
+  // }
+  getMessages(props) {
+    let { selectedPrivateRoomId } = props.privateRoom;
+    let { messagesMap } = props.message;
+    let messages = messagesMap[selectedPrivateRoomId] || [];
+    return messages;
+  }
   listMessages() {
     const { selectedPrivateRoomId } = this.props.privateRoom;
     this.props.listMessages(selectedPrivateRoomId);
   }
   sendMessage(newMessage, roomId, userId) {
     this.props.sendMessage(newMessage, roomId, userId);
-    this.scrollToEnd();
+    this.scrollToEnd(500);
   }
   scrollToEnd(msWait = 200) {
     setTimeout(() => this.scrollView.scrollToEnd({ animated: true }), msWait);
